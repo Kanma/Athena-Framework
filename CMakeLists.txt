@@ -57,7 +57,7 @@ add_subdirectory(dependencies)
 if (ATHENA_FRAMEWORK_STATIC)
     xmake_init_static(ATHENA_FRAMEWORK)
     xmake_add_link_paths(ATHENA_FRAMEWORK "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
-    xmake_add_link_targets(ATHENA_FRAMEWORK Athena-Framework)
+    xmake_add_link_targets(ATHENA_FRAMEWORK Athena-Framework "${XMAKE_ATHENA_GRAPHICS_LINK_TARGETS}" "${XMAKE_ATHENA_INPUTS_LINK_TARGETS}")
 else(APPLE)
     xmake_init_framework(ATHENA_FRAMEWORK)
     xmake_add_link_paths(ATHENA_FRAMEWORK "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
@@ -65,7 +65,7 @@ else(APPLE)
 else()
     xmake_init_dynamic(ATHENA_FRAMEWORK)
     xmake_add_link_paths(ATHENA_FRAMEWORK "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-    xmake_add_link_targets(ATHENA_FRAMEWORK Athena-Framework "${XMAKE_ATHENA_GRAPHICS_LINK_TARGETS}" "${XMAKE_ATHENA_INPUTS_LINK_TARGETS}")
+    xmake_add_link_targets(ATHENA_FRAMEWORK Athena-Framework)
 endif()
 
 xmake_add_include_paths(ATHENA_FRAMEWORK ${ATHENA_FRAMEWORK_SOURCE_DIR}/include
@@ -73,5 +73,5 @@ xmake_add_include_paths(ATHENA_FRAMEWORK ${ATHENA_FRAMEWORK_SOURCE_DIR}/include
                                          ${XMAKE_ATHENA_INPUTS_INCLUDE_PATHS})
 
 # Subdirectories to process
-# add_subdirectory(include)
-# add_subdirectory(src)
+add_subdirectory(include)
+add_subdirectory(src)
