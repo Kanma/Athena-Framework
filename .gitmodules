@@ -13,3 +13,6 @@
 [submodule "dependencies/Athena-Graphics"]
 	path = dependencies/Athena-Graphics
 	url = git://github.com/Kanma/Athena-Graphics.git
+[submodule "dependencies/Athena-Inputs"]
+	path = dependencies/Athena-Inputs
+	url = git://github.com/Kanma/Athena-Inputs.git
