@@ -31,3 +31,6 @@
 [submodule "dependencies/zlib"]
 	path = dependencies/zlib
 	url = git://github.com/Kanma/Athena-Dependencies-zlib.git
+[submodule "dependencies/zziplib"]
+	path = dependencies/zziplib
+	url = git://github.com/Kanma/Athena-Dependencies-zziplib.git
