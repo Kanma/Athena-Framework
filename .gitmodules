@@ -28,3 +28,6 @@
 [submodule "dependencies/freetype"]
 	path = dependencies/freetype
 	url = git://github.com/Kanma/Athena-Dependencies-FreeType.git
+[submodule "dependencies/zlib"]
+	path = dependencies/zlib
+	url = git://github.com/Kanma/Athena-Dependencies-zlib.git
