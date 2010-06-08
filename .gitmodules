@@ -1,0 +1,3 @@
+[submodule "dependencies/UnitTest++"]
+	path = dependencies/UnitTest++
+	url = git://github.com/Kanma/Athena-Dependencies-UnitTest-cpp.git
