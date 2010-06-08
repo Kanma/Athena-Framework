@@ -10,3 +10,6 @@
 [submodule "dependencies/Athena-Entities"]
 	path = dependencies/Athena-Entities
 	url = git://github.com/Kanma/Athena-Entities.git
+[submodule "dependencies/Athena-Graphics"]
+	path = dependencies/Athena-Graphics
+	url = git://github.com/Kanma/Athena-Graphics.git
