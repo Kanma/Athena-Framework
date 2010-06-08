@@ -1,0 +1,12 @@
+# Subdirectories to process
+add_subdirectory(UnitTest++)
+add_subdirectory(zlib)
+add_subdirectory(zziplib)
+add_subdirectory(freeimage)
+add_subdirectory(freetype)
+add_subdirectory(ogre)
+add_subdirectory(Athena-Math)
+add_subdirectory(Athena-Core)
+add_subdirectory(Athena-Entities)
+add_subdirectory(Athena-Graphics)
+add_subdirectory(Athena-Inputs)
