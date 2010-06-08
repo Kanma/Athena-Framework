@@ -1,0 +1,37 @@
+********************************************************************************
+*                                                                              *
+*                               Athena-Framework                               *
+*                    http://github.com/Kanma/Athena-Framework                  *
+*                                                                              *
+********************************************************************************
+
+
+---------------------------------------
+- Summary
+---------------------------------------
+
+The Athena Game Framework, which glue together all the modules and add some
+game-related systems (Tasks, Game States).
+
+
+---------------------------------------
+- License
+---------------------------------------
+
+Athena-Framework is is made available under the MIT License. The text of the license
+is in the file 'LICENSE'.
+
+Under the MIT License you may use Athena-Framework for any purpose you wish, without
+warranty, and modify it if you require, subject to one condition:
+
+   "The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software."
+
+In practice this means that whenever you distribute your application, whether as
+binary or as source code, you must include somewhere in your distribution the
+text in the file 'LICENSE'. This might be in the printed documentation, as a
+file on delivered media, or even on the credits / acknowledgements of the
+runtime application itself; any of those would satisfy the requirement.
+
+Even if the license doesn't require it, please consider to contribute your
+modifications back to the community.
