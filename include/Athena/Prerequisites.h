@@ -26,6 +26,7 @@ namespace Athena
         class Task;
         class TaskManager;
         
+        class GraphicsTask;
         class TaskEnd;
         class TaskStart;
         

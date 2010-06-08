@@ -1,5 +1,6 @@
 # List the source files
-set(SRCS Tasks/TaskEnd.cpp
+set(SRCS Tasks/GraphicsTask.cpp
+         Tasks/TaskEnd.cpp
          Tasks/TaskManager.cpp
          Tasks/TaskStart.cpp
 )
