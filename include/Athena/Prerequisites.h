@@ -26,6 +26,9 @@ namespace Athena
         class Task;
         class TaskManager;
         
+        class TaskEnd;
+        class TaskStart;
+        
         /// Represents the priority of a task
 		typedef unsigned int tPriority;
 	}

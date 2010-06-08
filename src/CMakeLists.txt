@@ -1,5 +1,7 @@
 # List the source files
-set(SRCS Tasks/TaskManager.cpp
+set(SRCS Tasks/TaskEnd.cpp
+         Tasks/TaskManager.cpp
+         Tasks/TaskStart.cpp
 )
 
 # Precompiler definitions
