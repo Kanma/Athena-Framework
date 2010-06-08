@@ -16,3 +16,6 @@
 [submodule "dependencies/Athena-Inputs"]
 	path = dependencies/Athena-Inputs
 	url = git://github.com/Kanma/Athena-Inputs.git
+[submodule "dependencies/xmake"]
+	path = dependencies/xmake
+	url = git://github.com/Kanma/XMake.git
