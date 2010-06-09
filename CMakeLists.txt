@@ -72,7 +72,12 @@ xmake_add_include_paths(ATHENA_FRAMEWORK ${ATHENA_FRAMEWORK_SOURCE_DIR}/include
                                          ${XMAKE_ATHENA_GRAPHICS_INCLUDE_PATHS}
                                          ${XMAKE_ATHENA_INPUTS_INCLUDE_PATHS})
 
+if (APPLE AND NOT ATHENA_FRAMEWORK_STATIC)
+    xmake_add_link_flags(ATHENA_FRAMEWORK "${XMAKE_ATHENA_GRAPHICS_LINK_FLAGS} ${XMAKE_ATHENA_INPUTS_LINK_FLAGS}")
+endif()
+
 # Subdirectories to process
 add_subdirectory(include)
 add_subdirectory(src)
+add_subdirectory(config)
 add_subdirectory(unittests)

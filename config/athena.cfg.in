@@ -1,0 +1,17 @@
+[Athena]
+Config = ogre.cfg
+Plugins = plugins.cfg
+Resources = resources.cfg
+
+[Log]
+Athena = athena.log.xml
+Kind = XML
+Ogre = ogre.log
+RedirectOgreLog = false
+
+[Inputs]
+Enable = true
+
+[DefaultWindow]
+Enable = true
+Title = Athena - Demo
