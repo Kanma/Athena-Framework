@@ -111,7 +111,6 @@ Engine::Engine()
 : m_pTaskManager(0), m_pGameStateManager(0), m_pScenesManager(0), m_pComponentsManager(0),
   m_pInputsUnit(0), m_pOgreLogListener(0), m_bOwnOgreLogManager(true)
 {
-	assert(!ms_Singleton && "There is already an engine instance");
 }
 
 //---------------------------------------------------------------------
