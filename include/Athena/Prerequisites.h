@@ -19,6 +19,15 @@
 namespace Athena
 {
 	//------------------------------------------------------------------------------------
+	/// @brief	Contains all the game states-related classes
+	//------------------------------------------------------------------------------------
+    namespace GameStates
+    {
+        class IGameState;
+        class GameStateManager;
+	}
+
+	//------------------------------------------------------------------------------------
 	/// @brief	Contains all the tasks-related classes
 	//------------------------------------------------------------------------------------
     namespace Tasks
