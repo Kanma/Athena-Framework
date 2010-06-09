@@ -35,6 +35,8 @@ namespace Athena
         class Task;
         class TaskManager;
         
+        class GameStateTask;
+        class GameStateStackTask;
         class GraphicsTask;
         class InputsTask;
         class TaskEnd;
@@ -67,14 +69,14 @@ namespace Athena
 	const Tasks::tPriority TASK_BEHAVIORS			= TASK_AUDIO + TASK_INTERVAL;
 	/// Priority of the GUI task (see GUI::GUITask)
 	const Tasks::tPriority TASK_GUI					= TASK_BEHAVIORS + TASK_INTERVAL;
-	/// Priority of the Gamestate task (see GameState::GameStateTask)
+	/// Priority of the Gamestate task (see GameStates::GameStateTask)
 	const Tasks::tPriority TASK_GAMESTATE			= TASK_GUI + TASK_INTERVAL;
 	/// Priority of the Graphics task (see Graphics::GraphicsTask)
 	const Tasks::tPriority TASK_GRAPHICS			= TASK_GAMESTATE + TASK_INTERVAL;
-	/// Priority of the Gamestate2 task (see GameState::GameStateTask2)
-	const Tasks::tPriority TASK_GAMESTATE2			= TASK_GRAPHICS + TASK_INTERVAL;
+	/// Priority of the Gamestate2 task (see GameStates::GameStateStackTask)
+	const Tasks::tPriority TASK_GAMESTATESTACK		= TASK_GRAPHICS + TASK_INTERVAL;
 	/// Priority of the End task (see Tasks::EndTask)
-	const Tasks::tPriority TASK_END					= TASK_GAMESTATE2 + TASK_INTERVAL;
+	const Tasks::tPriority TASK_END					= TASK_GAMESTATESTACK + TASK_INTERVAL;
 
 	/// Macro used to create a priority after a standard one
 #	define ATHENA_PRIORITY_AFTER(standard, offset)	(standard + TASK_RESERVED_INTERVAL + offset)
