@@ -1,5 +1,6 @@
 # List the source files
 set(SRCS Configuration.cpp
+         Engine.cpp
          GameStates/GameStateManager.cpp
          Tasks/GameStateTask.cpp
          Tasks/GameStateStackTask.cpp

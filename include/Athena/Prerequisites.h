@@ -19,7 +19,8 @@
 namespace Athena
 {
     class Configuration;
-    
+    class Engine;
+
     
 	//------------------------------------------------------------------------------------
 	/// @brief	Contains all the game states-related classes

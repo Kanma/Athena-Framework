@@ -4,8 +4,8 @@
 	Declaration of the class 'Athena::Tasks::TaskEnd'
 */
 
-#ifndef _ATHENA_TASKS_TASKSTART_H
-#define _ATHENA_TASKS_TASKSTART_H
+#ifndef _ATHENA_TASKS_TASKEND_H
+#define _ATHENA_TASKS_TASKEND_H
 
 #include <Athena/Prerequisites.h>
 #include <Athena/Tasks/Task.h>
