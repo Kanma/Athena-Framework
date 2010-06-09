@@ -105,6 +105,47 @@ public:
 	                                       const std::string& strTitle,
 										   int width, int height,
 										   bool fullscreen);
+										   
+    //-----------------------------------------------------------------------------------
+    /// @brief	Retrieves the Task Manager
+    //-----------------------------------------------------------------------------------
+	inline Tasks::TaskManager* getTaskManager()
+	{
+        return m_pTaskManager;
+	}
+
+    //-----------------------------------------------------------------------------------
+    /// @brief	Retrieves the Game State Manager
+    //-----------------------------------------------------------------------------------
+	inline GameStates::GameStateManager* getGameStateManager()
+	{
+        return m_pGameStateManager;
+	}
+
+    //-----------------------------------------------------------------------------------
+    /// @brief	Retrieves the Scenes Manager
+    //-----------------------------------------------------------------------------------
+	inline Entities::ScenesManager* getScenesManager()
+	{
+        return m_pScenesManager;
+	}
+
+    //-----------------------------------------------------------------------------------
+    /// @brief	Retrieves the Components Manager
+    //-----------------------------------------------------------------------------------
+	inline Entities::ComponentsManager* getComponentsManager()
+	{
+        return m_pComponentsManager;
+	}
+
+    //-----------------------------------------------------------------------------------
+    /// @brief	Retrieves the Inputs Unit
+    //-----------------------------------------------------------------------------------
+	inline Inputs::InputsUnit* getInputsUnit()
+	{
+        return m_pInputsUnit;
+	}
+
 
 private:
     //-----------------------------------------------------------------------------------
