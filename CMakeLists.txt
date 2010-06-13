@@ -10,6 +10,10 @@ if (NOT DEFINED ATHENA_FRAMEWORK_STATIC)
     set(ATHENA_FRAMEWORK_STATIC OFF CACHE BOOL "Build Athena-Framework as a static library")
 endif()
 
+if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
+    set(ATHENA_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
+endif()
+
 # Set the output paths
 if (NOT ATHENA_BINARY_DIR)
     set(ATHENA_BINARY_DIR "${ATHENA_FRAMEWORK_BINARY_DIR}")
