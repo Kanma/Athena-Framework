@@ -96,13 +96,37 @@ public:
     //-----------------------------------------------------------------------------------
 	void killAllTasks();
 
+
+	//_____ Time-related methods __________
+public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Returns the main timer of the application
+    /// @brief	Returns the timer used by the Task Manager
     //-----------------------------------------------------------------------------------
-    inline Utils::Timer* getMainTimer()
+    inline Utils::Timer* getTimer()
     {
-        return &m_mainTimer;
+        return &m_timer;
     }
+
+	//-----------------------------------------------------------------------------------
+	/// @brief	Returns the number of seconds elapsed since the last loop over the tasks
+	/// @return	The number of seconds
+	//-----------------------------------------------------------------------------------
+	inline float getElapsedSeconds() const { return m_fElapsedSeconds; }
+
+	//-----------------------------------------------------------------------------------
+	/// @brief	Returns the number of milliseconds elapsed since the last loop over the
+	///         tasks
+	/// @return	The number of milliseconds
+	//-----------------------------------------------------------------------------------
+	inline unsigned long getElapsedMilliseconds() const { return m_ulElapsedMilliseconds; }
+
+	//-----------------------------------------------------------------------------------
+	/// @brief	Returns the number of microseconds elapsed since the last loop over the
+	///         tasks
+	/// @return	The number of microseconds
+	//-----------------------------------------------------------------------------------
+	inline unsigned long getElapsedMicroseconds() const { return m_ulElapsedMicroseconds; }
+
 
 
 	//_____ Internal types __________
@@ -113,8 +137,13 @@ private:
 
 	//_____ Attributes __________
 private:
-	tTasksMap	    m_tasks;	    ///< The list of registered tasks
-    Utils::Timer    m_mainTimer;    ///< Main timer of the application
+	tTasksMap	    m_tasks;	                ///< The list of registered tasks
+    Utils::Timer    m_timer;                    ///< Timer used by the manager
+	unsigned long	m_ulMicroseconds;			///< The number of microseconds elapsed since the last reset of the timer
+	unsigned long	m_ulMilliseconds;			///< The number of milliseconds elapsed since the last reset of the timer
+	unsigned long	m_ulElapsedMicroseconds;	///< The number of microseconds elapsed since the last loop over the tasks
+	unsigned long	m_ulElapsedMilliseconds;	///< The number of milliseconds elapsed since the last loop over the tasks
+	float			m_fElapsedSeconds;			///< The number of seconds elapsed since the last loop over the tasks
 };
 
 }

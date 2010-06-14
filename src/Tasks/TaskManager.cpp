@@ -32,6 +32,8 @@ static const char* __CONTEXT__ = "Tasks Manager";
 /****************************** CONSTRUCTION / DESTRUCTION *****************************/
 
 TaskManager::TaskManager()
+: m_ulMicroseconds(0), m_ulMilliseconds(0), m_ulElapsedMicroseconds(0),
+  m_ulElapsedMilliseconds(0), m_fElapsedSeconds(0.0f)
 {
 	ATHENA_LOG_EVENT("Creation");
 }
@@ -59,16 +61,21 @@ void TaskManager::execute()
 
 	pSceneManager->_updateSceneGraph(0);
 
+	// Reset the main timer
+	m_timer.reset();
+	m_ulMicroseconds		= 0;
+	m_ulMilliseconds		= 0;
+	m_ulElapsedMicroseconds = 0;
+	m_ulElapsedMilliseconds = 0;
+	m_fElapsedSeconds		= 0.0f;
+
 	// Process each task one after another
 	while (!m_tasks.empty())
 	{
-		// Reset the main timer
-		m_mainTimer.reset();
+		WindowEventUtilities::messagePump();
 
 		// Process the tasks
 		step();
-
-		WindowEventUtilities::messagePump();
 	}
 
 	ATHENA_LOG_EVENT("End of the execution");
@@ -103,6 +110,17 @@ void TaskManager::step()
 		if (!pTask->isSuspended())
 			pTask->update();
 	}
+
+    // Update the timings
+	unsigned long ulLastMicroseconds = m_ulMicroseconds;
+	unsigned long ulLastMilliseconds = m_ulMilliseconds;
+
+	m_ulMicroseconds = m_timer.getMicroseconds();
+	m_ulMilliseconds = (unsigned long) (m_ulMicroseconds * 0.001f);
+
+	m_ulElapsedMicroseconds = m_ulMicroseconds - ulLastMicroseconds;
+	m_ulElapsedMilliseconds = m_ulMilliseconds - ulLastMilliseconds;
+	m_fElapsedSeconds		= (float) m_ulElapsedMilliseconds * 0.001f;
 }
 
 //---------------------------------------------------------------------
