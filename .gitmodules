@@ -37,3 +37,6 @@
 [submodule "dependencies/bullet"]
 	path = dependencies/bullet
 	url = git://github.com/Kanma/Athena-Dependencies-Bullet.git
+[submodule "dependencies/Athena-Physics"]
+	path = dependencies/Athena-Physics
+	url = git://github.com/Kanma/Athena-Physics.git
