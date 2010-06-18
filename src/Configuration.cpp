@@ -47,7 +47,10 @@ Configuration::Configuration()
     // audio.bEnable                        = true;
 
 	// Physics configuration defaults
-    // physics.bEnable                      = true;
+    physics.bEnable                     = true;
+    physics.nbMaxSubSteps               = 1;
+    physics.fixedTimeStep               = Math::Real(1.0 / 60.0);
+    
     // physics.bCollisionManagerEnable      = true;
 
 	// Scripting configuration defaults
@@ -159,12 +162,13 @@ void Configuration::load(const std::string& strConfigFile)
 
 
 	// Physics section
-    // if (cfgFile.selectSection("Physics"))
-    // {
-    //  // Optional parameters
-    //  cfgFile.getParameterValue("Enable",             physics.bEnable);
-    //  cfgFile.getParameterValue("CollisionManager",   physics.bCollisionManagerEnable);
-    // }
+    if (cfgFile.selectSection("Physics"))
+    {
+        // Optional parameters
+        cfgFile.getParameterValue("Enable",         physics.bEnable);
+        cfgFile.getParameterValue("NbMaxSubSteps",  physics.nbMaxSubSteps);
+        cfgFile.getParameterValue("FixedTimeStep",  physics.fixedTimeStep);
+    }
 
 
 	// Scripting section

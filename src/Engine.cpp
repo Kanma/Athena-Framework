@@ -16,7 +16,6 @@
 
 #include <Athena-Graphics/OgreLogListener.h>
 
-// #include <Athena-Physics/PhysicsUnit.h>
 // #include <Athena-Audio/AudioManager.h>
 // #include <Athena-Scripting/ScriptingManager.h>
 // #include <Athena-GUI/GUIManager.h>
@@ -27,6 +26,7 @@
 #include <Athena/Tasks/GameStateTask.h>
 #include <Athena/Tasks/GraphicsTask.h>
 #include <Athena/Tasks/InputsTask.h>
+#include <Athena/Tasks/PhysicsTask.h>
 #include <Athena/Tasks/TaskEnd.h>
 #include <Athena/Tasks/TaskStart.h>
 
@@ -269,31 +269,19 @@ void Engine::setup()
         // Initialize the modules
         Graphics::initialize();
 
+        if (m_configuration.physics.bEnable)
+            Physics::initialize();
+
 		// Create the standard tasks
 		m_pTaskManager->addTask(TASK_START,             new TaskStart());
 		m_pTaskManager->addTask(TASK_GRAPHICS,          new GraphicsTask());
 		m_pTaskManager->addTask(TASK_GAMESTATE,         new GameStateTask(m_pGameStateManager));
 		m_pTaskManager->addTask(TASK_GAMESTATESTACK,    new GameStateStackTask(m_pGameStateManager));
 		m_pTaskManager->addTask(TASK_END,               new TaskEnd());
-		
-		// Create the Physics unit
-        // if (m_configuration.physics.bEnable)
-        // {
-        //  new CPhysicsUnit();
-        // 
-        //  if (pPhysicsUnit->init())
-        //  {
-        //      pTasksManager->addTask(TASK_PHYSICS, new CPhysicsTask());
-        //  }
-        //  else
-        //  {
-        //      delete pPhysicsUnit;
-        //      pPhysicsUnit = 0;
-        // 
-        //      ATHENA_LOG_ERROR("Failed to create the Physics Unit");
-        //  }
-        // }
 
+        if (m_configuration.physics.bEnable)
+		    m_pTaskManager->addTask(TASK_PHYSICS, new PhysicsTask());
+		
 		// Create the inputs unit
 		if (pMainWindow && m_configuration.inputs.bEnable)
 			createInputsUnit();
@@ -379,9 +367,6 @@ void Engine::destroy()
 
 	delete m_pComponentsManager;
 	m_pComponentsManager = 0;
-
-    // delete pPhysicsUnit;
-    // pPhysicsUnit = 0;
 
 	if (pOgreRoot)
 	{

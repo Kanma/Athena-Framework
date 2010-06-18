@@ -8,6 +8,7 @@
 #define _ATHENA_PREREQUISITES_H_
 
 #include <Athena-Graphics/Prerequisites.h>
+#include <Athena-Physics/Prerequisites.h>
 #include <Athena-Inputs/Prerequisites.h>
 #include <Athena/Config.h>
 

@@ -75,11 +75,12 @@ struct tDefaultWindowConf
 //-----------------------------------------------------------------------------------
 /// @brief	Contains the configuration of the Physics subsystem
 //-----------------------------------------------------------------------------------
-// struct tPhysicsConf
-// {
-//  bool            bEnable;                    ///< Indicates if the Physics subsystem is enabled
-//  bool            bCollisionManagerEnable;    ///< Indicates if the collisions manager is enabled
-// };
+struct tPhysicsConf
+{
+    bool            bEnable;                    ///< Indicates if the Physics subsystem is enabled
+    unsigned int    nbMaxSubSteps;              ///< Maximum number of substeps during a simulation
+    float           fixedTimeStep;              ///< Fixed timesteps used for the simulations
+};
 
 //-----------------------------------------------------------------------------------
 /// @brief	Contains the configuration of the Scripting subsystem
@@ -135,7 +136,7 @@ public:
 	tInputsConf			inputs;			///< Inputs configuration
 	tDefaultWindowConf	defaultWindow;	///< Default window configuration
     // tAudioConf          audio;          ///< Audio configuration
-    // tPhysicsConf        physics;        ///< Physics configuration
+    tPhysicsConf        physics;        ///< Physics configuration
     // tScriptingConf      scripting;      ///< Scripting configuration
     // tNetworkConf        network;        ///< Network configuration
 };

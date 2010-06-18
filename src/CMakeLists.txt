@@ -6,6 +6,7 @@ set(SRCS Configuration.cpp
          Tasks/GameStateStackTask.cpp
          Tasks/GraphicsTask.cpp
          Tasks/InputsTask.cpp
+         Tasks/PhysicsTask.cpp
          Tasks/TaskEnd.cpp
          Tasks/TaskManager.cpp
          Tasks/TaskStart.cpp
@@ -21,6 +22,7 @@ xmake_include_directories(ATHENA_FRAMEWORK)
 if (NOT ATHENA_FRAMEWORK_STATIC)
     add_library(Athena-Framework SHARED ${SRCS})
     xmake_target_link_libraries(Athena-Framework ATHENA_GRAPHICS)
+    xmake_target_link_libraries(Athena-Framework ATHENA_PHYSICS)
     xmake_target_link_libraries(Athena-Framework ATHENA_INPUTS)
 
     set_target_properties(Athena-Framework PROPERTIES OUTPUT_NAME "Athena")
