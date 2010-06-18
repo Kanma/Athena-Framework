@@ -56,8 +56,11 @@ void PhysicsTask::update()
             World* pWorld = dynamic_cast<World*>(pScene->getComponent(
                         Entities::tComponentID(Entities::COMP_PHYSICAL, World::DEFAULT_NAME)));
             
-            pWorld->stepSimulation(elapsed, pConfig->physics.nbMaxSubSteps,
-                                   pConfig->physics.fixedTimeStep);
+            if (pWorld)
+            {
+                pWorld->stepSimulation(elapsed, pConfig->physics.nbMaxSubSteps,
+                                       pConfig->physics.fixedTimeStep);
+            }
         }
     }
 }
