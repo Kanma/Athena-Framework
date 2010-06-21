@@ -15,11 +15,16 @@ if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
 endif()
 
 # Set the output paths
-if (NOT ATHENA_BINARY_DIR)
+if (NOT DEFINED ATHENA_BINARY_DIR)
     set(ATHENA_BINARY_DIR "${ATHENA_FRAMEWORK_BINARY_DIR}")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ATHENA_FRAMEWORK_BINARY_DIR}/bin")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ATHENA_FRAMEWORK_BINARY_DIR}/lib")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${ATHENA_FRAMEWORK_BINARY_DIR}/bin")
+endif()
+
+# Set the dependencies path
+if (NOT DEFINED ATHENA_DEPENDENCIES_DIR)
+    set(ATHENA_DEPENDENCIES_DIR "${ATHENA_FRAMEWORK_SOURCE_DIR}/dependencies")
 endif()
 
 # We only support Intel 32bits builds
@@ -54,9 +59,31 @@ if (NOT DEFINED ATHENA_INPUTS_STATIC)
 endif()
 
 # Import XMake
-if (EXISTS "${ATHENA_FRAMEWORK_SOURCE_DIR}/dependencies/xmake/XMake.cmake")
-    include("${ATHENA_FRAMEWORK_SOURCE_DIR}/dependencies/xmake/XMake.cmake")
+if (NOT EXISTS "${ATHENA_DEPENDENCIES_DIR}/xmake/XMake.cmake")
+    message(FATAL_ERROR
+"Missing dependency: XMake
+Athena-Framework requires the following dependencies:
+   - XMake
+   - Athena-Math
+   - Athena-Core
+   - Athena-Entities
+   - Athena-Graphics
+   - Athena-Physics
+   - Athena-Inputs
+   - UnitTest++
+   - Ogre
+   - Bullet
+   - FreeImage
+   - FreeType
+   - ZLib
+   - zziplib
+They are provided as GIT submodules of this repository.
+Did you forgot to execute the following commands?
+   git submodule init
+   git submodule update")
 endif()
+
+include("${ATHENA_DEPENDENCIES_DIR}/xmake/XMake.cmake")
 
 # Process the dependencies
 add_subdirectory(dependencies)
