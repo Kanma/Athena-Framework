@@ -30,7 +30,7 @@ TaskEnd::~TaskEnd()
 bool TaskEnd::start()
 {
 	// Assertions
-	assert(pOgreRoot);
+	assert(Ogre::Root::getSingletonPtr());
 
 	return true;
 }
@@ -39,7 +39,7 @@ bool TaskEnd::start()
 
 void TaskEnd::update()
 {
-	pOgreRoot->_fireFrameEnded();
+	Ogre::Root::getSingletonPtr()->_fireFrameEnded();
 }
 
 //---------------------------------------------------------------------

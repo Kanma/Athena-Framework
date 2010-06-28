@@ -9,13 +9,19 @@
 #include <Athena-Core/Utils/Timer.h>
 #include <Athena-Core/Utils/StringConverter.h>
 #include <Athena-Core/Log/LogManager.h>
+#include <Athena-Entities/ScenesManager.h>
+#include <Athena-Entities/Scene.h>
+#include <Athena-Graphics/Visual/World.h>
+#include <Ogre/OgreRoot.h>
 #include <Ogre/OgreSceneManager.h>
 #include <Ogre/OgreWindowEventUtilities.h>
 
 
 using namespace Athena;
 using namespace Athena::Tasks;
+using namespace Athena::Entities;
 using namespace Athena::Graphics;
+using namespace Athena::Graphics::Visual;
 using namespace Athena::Utils;
 using namespace Athena::Log;
 using namespace std;
@@ -59,7 +65,17 @@ void TaskManager::execute()
 {
 	ATHENA_LOG_EVENT("Starts the execution");
 
-	pSceneManager->_updateSceneGraph(0);
+    ScenesManager::tScenesIterator iter = ScenesManager::getSingletonPtr()->getScenesIterator();
+    while (iter.hasMoreElements())
+    {
+        Scene* pScene = iter.getNext();
+        if (pScene->isEnabled())
+        {
+            World* pWorld = dynamic_cast<World*>(pScene->getMainComponent(COMP_VISUAL));
+            if (pWorld && pWorld->getSceneManager())
+                pWorld->getSceneManager()->_updateSceneGraph(0);
+        }
+    }
 
 	// Reset the main timer
 	m_timer.reset();

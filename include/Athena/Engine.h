@@ -105,6 +105,14 @@ public:
 	                                       const std::string& strTitle,
 										   int width, int height,
 										   bool fullscreen);
+
+    //-----------------------------------------------------------------------------------
+    /// @brief	Retrieves the main window of the application
+    //-----------------------------------------------------------------------------------
+    inline Ogre::RenderWindow* getMainWindow()
+    {
+        return m_pMainWindow;
+	}
 										   
     //-----------------------------------------------------------------------------------
     /// @brief	Retrieves the Task Manager
@@ -181,6 +189,7 @@ private:
     Graphics::OgreLogListener*      m_pOgreLogListener;     ///< The Ogre Log Listener
 	bool			                m_bOwnOgreLogManager;	///< Indicates if the engine is responsible to delete
 											                ///  the Log manager of Ogre
+    Ogre::RenderWindow*             m_pMainWindow;          ///< Main window of the application
 };
 
 }

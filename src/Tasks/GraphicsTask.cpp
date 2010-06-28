@@ -5,7 +5,11 @@
 */
 
 #include <Athena/Tasks/GraphicsTask.h>
+#include <Athena-Entities/ScenesManager.h>
+#include <Athena-Entities/Scene.h>
+#include <Athena-Graphics/Visual/World.h>
 #include <Ogre/OgreRoot.h>
+#include <Ogre/OgreSceneManager.h>
 
 // Windows-specific includes
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -18,6 +22,8 @@
 using namespace Athena;
 using namespace Athena::Tasks;
 using namespace Athena::Graphics;
+using namespace Athena::Graphics::Visual;
+using namespace Athena::Entities;
 
 
 /****************************** CONSTRUCTION / DESTRUCTION *****************************/
@@ -57,8 +63,19 @@ void GraphicsTask::update()
 	}
 #endif
 
-	pSceneManager->_updateSceneGraph(0);
-	pOgreRoot->_updateAllRenderTargets();
+    ScenesManager::tScenesIterator iter = ScenesManager::getSingletonPtr()->getScenesIterator();
+    while (iter.hasMoreElements())
+    {
+        Scene* pScene = iter.getNext();
+        if (pScene->isEnabled())
+        {
+            World* pWorld = dynamic_cast<World*>(pScene->getMainComponent(COMP_VISUAL));
+            if (pWorld && pWorld->getSceneManager())
+                pWorld->getSceneManager()->_updateSceneGraph(0);
+        }
+    }
+    
+	Ogre::Root::getSingletonPtr()->_updateAllRenderTargets();
 }
 
 //---------------------------------------------------------------------

@@ -109,7 +109,7 @@ std::string macBundlePath()
 
 Engine::Engine()
 : m_pTaskManager(0), m_pGameStateManager(0), m_pScenesManager(0), m_pComponentsManager(0),
-  m_pInputsUnit(0), m_pOgreLogListener(0), m_bOwnOgreLogManager(true)
+  m_pInputsUnit(0), m_pOgreLogListener(0), m_bOwnOgreLogManager(true), m_pMainWindow(0)
 {
 }
 
@@ -212,11 +212,25 @@ void Engine::setup()
 			m_bOwnOgreLogManager = false;
 		}
 
-		// Initializes Ogre
+		// Create the Task Manager
+		m_pTaskManager = new TaskManager();
+
+		// Create the Game State Manager
+		m_pGameStateManager = new GameStateManager();
+        m_pGameStateManager->setTaskManager(m_pTaskManager);
+
+		// Create the Scenes Manager
+		m_pScenesManager = new ScenesManager();
+
+		// Create the Components Manager
+		m_pComponentsManager = new ComponentsManager();
+
+		// Initializes the Graphics module & Ogre
 		assert(!m_configuration.athena.strPluginsFile.empty());
 		assert(!m_configuration.athena.strOgreConfigFile.empty());
-		pOgreRoot = new Root(m_configuration.athena.strPluginsFile, m_configuration.athena.strOgreConfigFile,
-							 (m_configuration.log.strOgreLogFile.empty() ? "Ogre.log" : m_configuration.log.strOgreLogFile));
+		Root* pOgreRoot = Graphics::initialize(m_configuration.athena.strPluginsFile,
+		                                       m_configuration.athena.strOgreConfigFile,
+							                   (m_configuration.log.strOgreLogFile.empty() ? "Ogre.log" : m_configuration.log.strOgreLogFile));
 
 		// Load config settings from ogre.cfg
 		if (!pOgreRoot->restoreConfig())
@@ -238,9 +252,9 @@ void Engine::setup()
 		if (m_configuration.defaultWindow.bEnable)
 		{
 			if (m_configuration.defaultWindow.strTitle.empty())
-				pMainWindow = pOgreRoot->initialise(true);
+				m_pMainWindow = pOgreRoot->initialise(true);
 			else
-				pMainWindow = pOgreRoot->initialise(true, m_configuration.defaultWindow.strTitle);
+				m_pMainWindow = pOgreRoot->initialise(true, m_configuration.defaultWindow.strTitle);
 
 			// Initialise the resources, parse scripts, etc
 			ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -250,25 +264,7 @@ void Engine::setup()
 			pOgreRoot->initialise(false);
 		}
 
-        // Get the SceneManager, in this case a generic one
-		pSceneManager = pOgreRoot->createSceneManager(Ogre::ST_GENERIC);
-
-		// Create the Task Manager
-		m_pTaskManager = new TaskManager();
-
-		// Create the Game State Manager
-		m_pGameStateManager = new GameStateManager();
-        m_pGameStateManager->setTaskManager(m_pTaskManager);
-
-		// Create the Scenes Manager
-		m_pScenesManager = new ScenesManager();
-
-		// Create the Components Manager
-		m_pComponentsManager = new ComponentsManager();
-
-        // Initialize the modules
-        Graphics::initialize();
-
+        // Initialize the Physics module
         if (m_configuration.physics.bEnable)
             Physics::initialize();
 
@@ -283,7 +279,7 @@ void Engine::setup()
 		    m_pTaskManager->addTask(TASK_PHYSICS, new PhysicsTask());
 		
 		// Create the inputs unit
-		if (pMainWindow && m_configuration.inputs.bEnable)
+		if (m_pMainWindow && m_configuration.inputs.bEnable)
 			createInputsUnit();
 
 		// Create the GUI manager
@@ -368,13 +364,11 @@ void Engine::destroy()
 	delete m_pComponentsManager;
 	m_pComponentsManager = 0;
 
-	if (pOgreRoot)
+	if (Root::getSingletonPtr())
 	{
-		pOgreRoot->shutdown();
-		delete pOgreRoot;
-		pOgreRoot		= 0;
-		pMainWindow		= 0;
-		pSceneManager	= 0;
+		Root::getSingletonPtr()->shutdown();
+		delete Root::getSingletonPtr();
+		m_pMainWindow	= 0;
 	}
 
 	if (m_bOwnOgreLogManager)
@@ -433,11 +427,11 @@ RenderWindow* Engine::createRenderWindow(int existingwindowhandle, const std::st
 
 	miscParams["externalWindowHandle"] = StringConverter::toString((size_t) existingwindowhandle);
 		
-	theWindow = pOgreRoot->createRenderWindow(strName, width, height, fullscreen, &miscParams);
+	theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
 
-	if (!pMainWindow)
+	if (!m_pMainWindow)
 	{
-		pMainWindow = theWindow;
+		m_pMainWindow = theWindow;
 
 		// Initialise the resources, parse scripts, etc
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -464,11 +458,11 @@ RenderWindow* Engine::createRenderWindow(const std::string& strName,
 
 	miscParams["title"] = strTitle;
 		
-	theWindow = pOgreRoot->createRenderWindow(strName, width, height, fullscreen, &miscParams);
+	theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
 
-	if (!pMainWindow)
+	if (!m_pMainWindow)
 	{
-		pMainWindow = theWindow;
+		m_pMainWindow = theWindow;
 
 		// Initialise the resources, parse scripts, etc
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -488,11 +482,11 @@ RenderWindow* Engine::createRenderWindow(const std::string& strName,
 void Engine::createInputsUnit()
 {
 	assert(!m_pInputsUnit);
-	assert(pMainWindow);
+	assert(m_pMainWindow);
 
 	m_pInputsUnit = new InputsUnit();
 
-	if (m_pInputsUnit->init(pMainWindow))
+	if (m_pInputsUnit->init(m_pMainWindow))
 	{
         // // Load the virtual controllers if necessary
         // if (!m_configuration.inputs.strVirtualControllersFile.empty() &&

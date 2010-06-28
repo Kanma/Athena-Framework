@@ -30,7 +30,7 @@ TaskStart::~TaskStart()
 bool TaskStart::start()
 {
 	// Assertions
-	assert(pOgreRoot);
+	assert(Ogre::Root::getSingletonPtr());
 
 	return true;
 }
@@ -39,7 +39,7 @@ bool TaskStart::start()
 
 void TaskStart::update()
 {
-	pOgreRoot->_fireFrameStarted();
+	Ogre::Root::getSingletonPtr()->_fireFrameStarted();
 }
 
 //---------------------------------------------------------------------
