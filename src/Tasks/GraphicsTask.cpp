@@ -44,7 +44,7 @@ GraphicsTask::~GraphicsTask()
 bool GraphicsTask::start()
 {
 	// Assertions
-	assert(pOgreRoot);
+	assert(Ogre::Root::getSingletonPtr());
 
 	return true;
 }
