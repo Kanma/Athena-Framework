@@ -58,8 +58,11 @@ public:
 
     //-----------------------------------------------------------------------------------
     /// @brief	Process the tasks, without looping
+    ///
+    /// @param  elapsedMicroSeconds     If greather than 0, overrides the real elapsed
+    ///                                 time computation
     //-----------------------------------------------------------------------------------
-	void step();
+	void step(unsigned long elapsedMicroSeconds = 0);
 	
     //-----------------------------------------------------------------------------------
     /// @brief	Add a task in the list

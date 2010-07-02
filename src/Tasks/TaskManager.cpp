@@ -99,7 +99,7 @@ void TaskManager::execute()
 
 //---------------------------------------------------------------------
 
-void TaskManager::step()
+void TaskManager::step(unsigned long elapsedMicroSeconds)
 {
 	// Declarations
 	tTasksIterator	iter, iter2, iterEnd;
@@ -127,11 +127,16 @@ void TaskManager::step()
 			pTask->update();
 	}
 
+
     // Update the timings
 	unsigned long ulLastMicroseconds = m_ulMicroseconds;
 	unsigned long ulLastMilliseconds = m_ulMilliseconds;
 
-	m_ulMicroseconds = m_timer.getMicroseconds();
+    if (elapsedMicroSeconds == 0)
+    	m_ulMicroseconds = m_timer.getMicroseconds();
+    else
+    	m_ulMicroseconds += elapsedMicroSeconds;
+
 	m_ulMilliseconds = (unsigned long) (m_ulMicroseconds * 0.001f);
 
 	m_ulElapsedMicroseconds = m_ulMicroseconds - ulLastMicroseconds;
