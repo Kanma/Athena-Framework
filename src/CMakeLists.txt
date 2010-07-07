@@ -18,6 +18,9 @@ add_definitions(-DATHENA_EXPORTS)
 # List the include paths
 xmake_include_directories(ATHENA_FRAMEWORK)
 
+# List the link directories
+xmake_link_directories(ATHENA_FRAMEWORK)
+
 # Declaration of the library
 if (NOT ATHENA_FRAMEWORK_STATIC)
     add_library(Athena-Framework SHARED ${SRCS})

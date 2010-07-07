@@ -9,6 +9,9 @@ file(GLOB SRCS main.cpp
                mocks/mocks.cpp
 )
 
+# List the link directories
+xmake_link_directories(ATHENA_FRAMEWORK)
+
 # Create and link the executable
 add_executable(UnitTests-Athena-Framework ${SRCS})
 
