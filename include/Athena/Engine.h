@@ -86,7 +86,7 @@ public:
     ///									screen
     /// @return							The render window, 0 if failed
     //-----------------------------------------------------------------------------------
-	Ogre::RenderWindow* createRenderWindow(int existingwindowhandle,
+	Ogre::RenderWindow* createRenderWindow(size_t existingwindowhandle,
 	                                       const std::string& strName,
 										   int width, int height,
 										   bool fullscreen);

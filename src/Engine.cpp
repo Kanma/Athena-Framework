@@ -418,15 +418,19 @@ void Engine::setupResources(const std::string& strFileName)
 
 //---------------------------------------------------------------------
 
-RenderWindow* Engine::createRenderWindow(int existingwindowhandle, const std::string& strName,
+RenderWindow* Engine::createRenderWindow(size_t existingwindowhandle, const std::string& strName,
 										 int width, int height, bool fullscreen)
 {
 	// Declarations
 	NameValuePairList miscParams;
 	RenderWindow*	  theWindow;
 
-	miscParams["externalWindowHandle"] = StringConverter::toString((size_t) existingwindowhandle);
-		
+	miscParams["externalWindowHandle"] = StringConverter::toString(existingwindowhandle);
+
+    #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+    	miscParams["macAPI"] = "cocoa";
+    #endif
+
 	theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
 
 	if (!m_pMainWindow)
