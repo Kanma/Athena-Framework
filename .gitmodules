@@ -1,6 +1,6 @@
 [submodule "dependencies/UnitTest++"]
 	path = dependencies/UnitTest++
-	url = git://github.com/Kanma/Athena-Dependencies-UnitTest-cpp.git
+	url = git://github.com/Kanma/UnitTest-cpp.git
 [submodule "dependencies/Athena-Math"]
 	path = dependencies/Athena-Math
 	url = git://github.com/Kanma/Athena-Math.git
@@ -10,33 +10,33 @@
 [submodule "dependencies/Athena-Entities"]
 	path = dependencies/Athena-Entities
 	url = git://github.com/Kanma/Athena-Entities.git
-[submodule "dependencies/Athena-Graphics"]
-	path = dependencies/Athena-Graphics
-	url = git://github.com/Kanma/Athena-Graphics.git
 [submodule "dependencies/Athena-Inputs"]
 	path = dependencies/Athena-Inputs
 	url = git://github.com/Kanma/Athena-Inputs.git
-[submodule "dependencies/xmake"]
-	path = dependencies/xmake
+[submodule "dependencies/XMake"]
+	path = dependencies/XMake
 	url = git://github.com/Kanma/XMake.git
-[submodule "dependencies/ogre"]
-	path = dependencies/ogre
-	url = git://github.com/Kanma/Athena-Dependencies-Ogre.git
-[submodule "dependencies/freeimage"]
-	path = dependencies/freeimage
-	url = git://github.com/Kanma/Athena-Dependencies-FreeImage.git
+[submodule "dependencies/Ogre"]
+	path = dependencies/Ogre
+	url = git://github.com/Kanma/Ogre.git
+[submodule "dependencies/FreeImage"]
+	path = dependencies/FreeImage
+	url = git://github.com/Kanma/FreeImage.git
 [submodule "dependencies/freetype"]
 	path = dependencies/freetype
-	url = git://github.com/Kanma/Athena-Dependencies-FreeType.git
+	url = git://github.com/Kanma/FreeType.git
 [submodule "dependencies/zlib"]
 	path = dependencies/zlib
-	url = git://github.com/Kanma/Athena-Dependencies-zlib.git
+	url = git://github.com/Kanma/zlib.git
 [submodule "dependencies/zziplib"]
 	path = dependencies/zziplib
-	url = git://github.com/Kanma/Athena-Dependencies-zziplib.git
-[submodule "dependencies/bullet"]
-	path = dependencies/bullet
-	url = git://github.com/Kanma/Athena-Dependencies-Bullet.git
+	url = git://github.com/Kanma/zziplib.git
+[submodule "dependencies/Bullet"]
+	path = dependencies/Bullet
+	url = git://github.com/Kanma/Bullet.git
 [submodule "dependencies/Athena-Physics"]
 	path = dependencies/Athena-Physics
 	url = git://github.com/Kanma/Athena-Physics.git
+[submodule "dependencies/Athena-Graphics"]
+	path = dependencies/Athena-Graphics
+	url = git://github.com/Kanma/Athena-Graphics.git

@@ -12,41 +12,29 @@ set(SRCS Configuration.cpp
          Tasks/TaskStart.cpp
 )
 
-# Precompiler definitions
-add_definitions(-DATHENA_EXPORTS)
 
 # List the include paths
-xmake_include_directories(ATHENA_FRAMEWORK)
+set(INCLUDE_PATHS "${ATHENA_FRAMEWORK_SOURCE_DIR}/include"
+                  "${XMAKE_BINARY_DIR}/include")
 
-# List the link directories
-xmake_link_directories(ATHENA_FRAMEWORK)
+include_directories(${INCLUDE_PATHS})
+
+xmake_import_search_paths(ATHENA_GRAPHICS)
+xmake_import_search_paths(ATHENA_PHYSICS)
+xmake_import_search_paths(ATHENA_INPUTS)
+
 
 # Declaration of the library
 if (NOT ATHENA_FRAMEWORK_STATIC)
-    add_library(Athena-Framework SHARED ${SRCS})
-    xmake_target_link_libraries(Athena-Framework ATHENA_GRAPHICS)
-    xmake_target_link_libraries(Athena-Framework ATHENA_PHYSICS)
-    xmake_target_link_libraries(Athena-Framework ATHENA_INPUTS)
-
-    set_target_properties(Athena-Framework PROPERTIES OUTPUT_NAME "Athena")
-
-    if (APPLE)
-        set_target_properties(Athena-Framework PROPERTIES LINK_FLAGS "${XMAKE_OGRE_LINK_FLAGS} ${XMAKE_ATHENA_INPUTS_LINK_FLAGS} -Wl,-rpath,@loader_path/.,-rpath,@loader_path/../Frameworks")
-    endif()
-
-    # Set the INSTALL_PATH so that the dynamic library can be local
-    set_target_properties(Athena-Framework PROPERTIES BUILD_WITH_INSTALL_RPATH ON
-                                                      INSTALL_NAME_DIR "@rpath"
-    )
-
-    if (UNIX)
-        set_target_properties(Athena-Framework PROPERTIES INSTALL_RPATH ".")
-    endif()
-
+    xmake_create_dynamic_library(ATHENA_FRAMEWORK Athena-Framework 1.0.0 1.0.0 ${SRCS})
 else()
-    add_library(Athena-Framework STATIC ${SRCS})
-
-    if (NOT WIN32)
-        set_target_properties(Athena-Framework PROPERTIES COMPILE_FLAGS "-fPIC")
-    endif()
+    xmake_create_static_library(ATHENA_FRAMEWORK Athena-Framework ${SRCS})
 endif()
+
+xmake_project_link(ATHENA_FRAMEWORK ATHENA_GRAPHICS ATHENA_PHYSICS ATHENA_INPUTS)
+
+xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_EXPORTS")
+
+
+# Exportations
+xmake_export_include_paths(ATHENA_FRAMEWORK ${INCLUDE_PATHS})

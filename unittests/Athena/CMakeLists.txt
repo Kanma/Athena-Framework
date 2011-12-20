@@ -1,29 +1,22 @@
 # Setup the search paths
-xmake_include_directories(ATHENA_FRAMEWORK)
-xmake_include_directories(UNITTEST_CPP)
+xmake_import_search_paths(ATHENA_FRAMEWORK)
+xmake_import_search_paths(UNITTEST_CPP)
+
 
 # List the source files
-file(GLOB SRCS main.cpp
-               test_GameStateManager.cpp
-               test_TaskManager.cpp
-               mocks/mocks.cpp
+set(SRCS main.cpp
+         test_GameStateManager.cpp
+         test_TaskManager.cpp
+         mocks/mocks.cpp
 )
 
-# List the link directories
-xmake_link_directories(ATHENA_FRAMEWORK)
 
-# Create and link the executable
-add_executable(UnitTests-Athena-Framework ${SRCS})
+# Declaration of the executable
+xmake_create_executable(UNITTESTS_ATHENA_FRAMEWORK UnitTests-Athena-Framework ${SRCS})
 
-xmake_target_link_libraries(UnitTests-Athena-Framework UNITTEST_CPP)
-xmake_target_link_libraries(UnitTests-Athena-Framework ATHENA_FRAMEWORK)
+xmake_project_link(UNITTESTS_ATHENA_FRAMEWORK UNITTEST_CPP)
+xmake_project_link(UNITTESTS_ATHENA_FRAMEWORK ATHENA_FRAMEWORK)
 
-# Set the RPATH
-if (APPLE)
-    set_target_properties(UnitTests-Athena-Framework PROPERTIES LINK_FLAGS "-Wl,-rpath,@loader_path/.")
-elseif (UNIX)
-    set_target_properties(UnitTests-Athena-Framework PROPERTIES INSTALL_RPATH ".")
-endif()
 
 # Run the unit tests
 get_property(PATH TARGET UnitTests-Athena-Framework PROPERTY RUNTIME_OUTPUT_DIRECTORY)
