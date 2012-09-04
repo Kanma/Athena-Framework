@@ -1,78 +1,78 @@
-/** @file	CMockGameState.h
-	@author	Philip Abbet
+/** @file   MockGameState.h
+    @author Philip Abbet
 
-	Definition of the class 'CMockGameState'
+    Definition of the class 'MockGameState'
 */
 
-#ifndef _CMOCKGAMESTATE_H_
-#define _CMOCKGAMESTATE_H_
+#ifndef _MOCKGAMESTATE_H_
+#define _MOCKGAMESTATE_H_
 
 #include <Athena/Prerequisites.h>
 #include <Athena/GameStates/IGameState.h>
 
 
 //---------------------------------------------------------------------------------------
-/// @brief	Mock implementation of a game state
+/// @brief  Mock implementation of a game state
 //---------------------------------------------------------------------------------------
-class CMockGameState: public Athena::GameStates::IGameState
+class MockGameState: public Athena::GameStates::IGameState
 {
-	//_____ Construction / Destruction __________
+    //_____ Construction / Destruction __________
 public:
-	CMockGameState()
-	: bEnterCalled(false), bExitCalled(true), bPauseCalled(false), bResumeCalled(false),
-	  bProcessCalled(false)
-	{
-	}
-	
-	virtual ~CMockGameState()
-	{
-	}
+    MockGameState()
+    : bEnterCalled(false), bExitCalled(true), bPauseCalled(false), bResumeCalled(false),
+      bProcessCalled(false)
+    {
+    }
+
+    virtual ~MockGameState()
+    {
+    }
 
 
-	//_____ Methods to implement __________
+    //_____ Methods to implement __________
 public:
-	virtual void enter()
-	{
-		bEnterCalled = true;
-	}
+    virtual void enter()
+    {
+        bEnterCalled = true;
+    }
 
-	virtual void exit()
-	{
-		bExitCalled = true;
-	}
+    virtual void exit()
+    {
+        bExitCalled = true;
+    }
 
-	virtual void pause()
-	{
-		bPauseCalled = true;
-	}
+    virtual void pause()
+    {
+        bPauseCalled = true;
+    }
 
-	virtual void resume()
-	{
-		bResumeCalled = true;
-	}
+    virtual void resume()
+    {
+        bResumeCalled = true;
+    }
 
-	virtual void process()
-	{
-		bProcessCalled = true;
-	}
+    virtual void process()
+    {
+        bProcessCalled = true;
+    }
 
-	void reset()
-	{
-		bEnterCalled	= false;
-		bExitCalled		= false;
-		bPauseCalled	= false;
-		bResumeCalled	= false;
-		bProcessCalled	= false;
-	}
+    void reset()
+    {
+        bEnterCalled    = false;
+        bExitCalled     = false;
+        bPauseCalled    = false;
+        bResumeCalled   = false;
+        bProcessCalled  = false;
+    }
 
 
-	//_____ Attributes __________
+    //_____ Attributes __________
 public:
-	bool bEnterCalled;
-	bool bExitCalled;
-	bool bPauseCalled;
-	bool bResumeCalled;
-	bool bProcessCalled;
+    bool bEnterCalled;
+    bool bExitCalled;
+    bool bPauseCalled;
+    bool bResumeCalled;
+    bool bProcessCalled;
 };
 
 #endif

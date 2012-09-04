@@ -1,4 +1,4 @@
 #include "Task.h"
 
-unsigned int CMockTask::uiGlobalStep = 0;
-unsigned int CMockTask::uiTasksCount = 0;
+unsigned int MockTask::uiGlobalStep = 0;
+unsigned int MockTask::uiTasksCount = 0;

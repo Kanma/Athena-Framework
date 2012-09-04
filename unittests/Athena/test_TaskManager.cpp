@@ -13,18 +13,18 @@ using namespace Ogre;
 
 struct TestEnvironment
 {
-	TestEnvironment()
-	{
-		pTaskManager = new TaskManager();
+    TestEnvironment()
+    {
+        pTaskManager = new TaskManager();
 
-		CMockTask::uiGlobalStep = 0;
-		CMockTask::uiTasksCount	= 0;
-	}
+        MockTask::uiGlobalStep = 0;
+        MockTask::uiTasksCount = 0;
+    }
 
-	~TestEnvironment()
-	{
-		delete pTaskManager;
-	}
+    ~TestEnvironment()
+    {
+        delete pTaskManager;
+    }
 
     TaskManager* pTaskManager;
 };
@@ -33,183 +33,183 @@ struct TestEnvironment
 struct TestEnvironmentWith3Tasks
 {
     TaskManager* pTaskManager;
-	CMockTask* pTask1;
-	CMockTask* pTask2;
-	CMockTask* pTask3;
+    MockTask* pTask1;
+    MockTask* pTask2;
+    MockTask* pTask3;
 
-	TestEnvironmentWith3Tasks()
-	{
-		pTaskManager = new TaskManager();
+    TestEnvironmentWith3Tasks()
+    {
+        pTaskManager = new TaskManager();
 
-		CMockTask::uiGlobalStep = 0;
-		CMockTask::uiTasksCount	= 0;
+        MockTask::uiGlobalStep = 0;
+        MockTask::uiTasksCount = 0;
 
-		pTask1 = new CMockTask();
-		pTaskManager->addTask(100, pTask1);
+        pTask1 = new MockTask();
+        pTaskManager->addTask(100, pTask1);
 
-		pTask2 = new CMockTask();
-		pTaskManager->addTask(200, pTask2);
+        pTask2 = new MockTask();
+        pTaskManager->addTask(200, pTask2);
 
-		pTask3 = new CMockTask();
-		pTaskManager->addTask(300, pTask3);
-	}
+        pTask3 = new MockTask();
+        pTaskManager->addTask(300, pTask3);
+    }
 
-	~TestEnvironmentWith3Tasks()
-	{
-		delete pTaskManager;
-	}
+    ~TestEnvironmentWith3Tasks()
+    {
+        delete pTaskManager;
+    }
 };
 
 
 SUITE(TaskManager)
 {
-	TEST_FIXTURE(TestEnvironment, AddTasks)
-	{
-		CHECK(pTaskManager->addTask(100, new CMockTask()));
-		CHECK(pTaskManager->addTask(200, new CMockTask()));
-		CHECK(pTaskManager->addTask(50, new CMockTask()));
-	}
+    TEST_FIXTURE(TestEnvironment, AddTasks)
+    {
+        CHECK(pTaskManager->addTask(100, new MockTask()));
+        CHECK(pTaskManager->addTask(200, new MockTask()));
+        CHECK(pTaskManager->addTask(50, new MockTask()));
+    }
 
 
-	TEST_FIXTURE(TestEnvironment, AddTasksWithSamePriorityFail)
-	{
+    TEST_FIXTURE(TestEnvironment, AddTasksWithSamePriorityFail)
+    {
         // Disable error output on stderr
         Athena::Log::LogManager logManager;
         logManager.addListener(new XMLLogListener("test_log.xml"), true);
 
-		CHECK(pTaskManager->addTask(100, new CMockTask()));
-		CHECK(!pTaskManager->addTask(100, new CMockTask()));
-	}
+        CHECK(pTaskManager->addTask(100, new MockTask()));
+        CHECK(!pTaskManager->addTask(100, new MockTask()));
+    }
 
 
-	TEST_FIXTURE(TestEnvironment, AddTasksWhichFailToStartFail)
-	{
+    TEST_FIXTURE(TestEnvironment, AddTasksWhichFailToStartFail)
+    {
         // Disable error output on stderr
         Athena::Log::LogManager logManager;
         logManager.addListener(new XMLLogListener("test_log.xml"), true);
 
-		CHECK(pTaskManager->addTask(100, new CMockTask()));
+        CHECK(pTaskManager->addTask(100, new MockTask()));
 
-		CMockTask* pTask = new CMockTask();
-		pTask->bCanStart = false;
-		CHECK(!pTaskManager->addTask(200, pTask));
-	}
-
-
-	TEST_FIXTURE(TestEnvironmentWith3Tasks, Step)
-	{
-		CHECK_EQUAL(0, pTask1->uiStep);
-		CHECK_EQUAL(0, pTask2->uiStep);
-		CHECK_EQUAL(0, pTask3->uiStep);
-
-		pTaskManager->step();
-
-		CHECK_EQUAL(1, pTask1->uiStep);
-		CHECK_EQUAL(2, pTask2->uiStep);
-		CHECK_EQUAL(3, pTask3->uiStep);
-
-		pTaskManager->step();
-
-		CHECK_EQUAL(4, pTask1->uiStep);
-		CHECK_EQUAL(5, pTask2->uiStep);
-		CHECK_EQUAL(6, pTask3->uiStep);
-	}
+        MockTask* pTask = new MockTask();
+        pTask->bCanStart = false;
+        CHECK(!pTaskManager->addTask(200, pTask));
+    }
 
 
-	TEST_FIXTURE(TestEnvironmentWith3Tasks, SuspendTask)
-	{
-		CHECK_EQUAL(0, pTask1->uiStep);
-		CHECK_EQUAL(0, pTask2->uiStep);
-		CHECK_EQUAL(0, pTask3->uiStep);
+    TEST_FIXTURE(TestEnvironmentWith3Tasks, Step)
+    {
+        CHECK_EQUAL(0, pTask1->uiStep);
+        CHECK_EQUAL(0, pTask2->uiStep);
+        CHECK_EQUAL(0, pTask3->uiStep);
 
-		pTaskManager->step();
+        pTaskManager->step();
 
-		CHECK_EQUAL(1, pTask1->uiStep);
-		CHECK_EQUAL(2, pTask2->uiStep);
-		CHECK_EQUAL(3, pTask3->uiStep);
+        CHECK_EQUAL(1, pTask1->uiStep);
+        CHECK_EQUAL(2, pTask2->uiStep);
+        CHECK_EQUAL(3, pTask3->uiStep);
 
-		CHECK(!pTask2->bSuspendCalled);
-		CHECK(!pTask2->isSuspended());
+        pTaskManager->step();
 
-		pTaskManager->suspendTask(200);
-
-		CHECK(pTask2->bSuspendCalled);
-		CHECK(pTask2->isSuspended());
-
-		pTaskManager->step();
-
-		CHECK_EQUAL(4, pTask1->uiStep);
-		CHECK_EQUAL(2, pTask2->uiStep);
-		CHECK_EQUAL(5, pTask3->uiStep);
-	}
+        CHECK_EQUAL(4, pTask1->uiStep);
+        CHECK_EQUAL(5, pTask2->uiStep);
+        CHECK_EQUAL(6, pTask3->uiStep);
+    }
 
 
-	TEST_FIXTURE(TestEnvironmentWith3Tasks, ResumeTask)
-	{
-		CHECK_EQUAL(0, pTask1->uiStep);
-		CHECK_EQUAL(0, pTask2->uiStep);
-		CHECK_EQUAL(0, pTask3->uiStep);
+    TEST_FIXTURE(TestEnvironmentWith3Tasks, SuspendTask)
+    {
+        CHECK_EQUAL(0, pTask1->uiStep);
+        CHECK_EQUAL(0, pTask2->uiStep);
+        CHECK_EQUAL(0, pTask3->uiStep);
 
-		pTaskManager->suspendTask(200);
+        pTaskManager->step();
 
-		pTaskManager->step();
+        CHECK_EQUAL(1, pTask1->uiStep);
+        CHECK_EQUAL(2, pTask2->uiStep);
+        CHECK_EQUAL(3, pTask3->uiStep);
 
-		CHECK_EQUAL(1, pTask1->uiStep);
-		CHECK_EQUAL(0, pTask2->uiStep);
-		CHECK_EQUAL(2, pTask3->uiStep);
+        CHECK(!pTask2->bSuspendCalled);
+        CHECK(!pTask2->isSuspended());
 
-		CHECK(pTask2->isSuspended());
-		CHECK(!pTask2->bResumeCalled);
+        pTaskManager->suspendTask(200);
 
-		pTaskManager->resumeTask(200);
+        CHECK(pTask2->bSuspendCalled);
+        CHECK(pTask2->isSuspended());
 
-		CHECK(!pTask2->isSuspended());
-		CHECK(pTask2->bResumeCalled);
+        pTaskManager->step();
 
-		pTaskManager->step();
-
-		CHECK_EQUAL(3, pTask1->uiStep);
-		CHECK_EQUAL(4, pTask2->uiStep);
-		CHECK_EQUAL(5, pTask3->uiStep);
-	}
+        CHECK_EQUAL(4, pTask1->uiStep);
+        CHECK_EQUAL(2, pTask2->uiStep);
+        CHECK_EQUAL(5, pTask3->uiStep);
+    }
 
 
-	TEST_FIXTURE(TestEnvironmentWith3Tasks, RemoveTask)
-	{
-		CHECK_EQUAL(0, pTask1->uiStep);
-		CHECK_EQUAL(0, pTask2->uiStep);
-		CHECK_EQUAL(0, pTask3->uiStep);
+    TEST_FIXTURE(TestEnvironmentWith3Tasks, ResumeTask)
+    {
+        CHECK_EQUAL(0, pTask1->uiStep);
+        CHECK_EQUAL(0, pTask2->uiStep);
+        CHECK_EQUAL(0, pTask3->uiStep);
 
-		CHECK_EQUAL(3, CMockTask::uiTasksCount);
+        pTaskManager->suspendTask(200);
 
-		CHECK(!pTask2->mustBeKilled());
+        pTaskManager->step();
 
-		pTaskManager->removeTask(200);
+        CHECK_EQUAL(1, pTask1->uiStep);
+        CHECK_EQUAL(0, pTask2->uiStep);
+        CHECK_EQUAL(2, pTask3->uiStep);
 
-		CHECK(pTask2->mustBeKilled());
+        CHECK(pTask2->isSuspended());
+        CHECK(!pTask2->bResumeCalled);
 
-		CHECK_EQUAL(3, CMockTask::uiTasksCount);
+        pTaskManager->resumeTask(200);
 
-		pTaskManager->step();
+        CHECK(!pTask2->isSuspended());
+        CHECK(pTask2->bResumeCalled);
 
-		CHECK_EQUAL(2, CMockTask::uiTasksCount);
+        pTaskManager->step();
 
-		CHECK_EQUAL(1, pTask1->uiStep);
-		CHECK_EQUAL(2, pTask3->uiStep);
-	}
+        CHECK_EQUAL(3, pTask1->uiStep);
+        CHECK_EQUAL(4, pTask2->uiStep);
+        CHECK_EQUAL(5, pTask3->uiStep);
+    }
 
 
-	TEST_FIXTURE(TestEnvironmentWith3Tasks, KillAllTasks)
-	{
-		CHECK_EQUAL(3, CMockTask::uiTasksCount);
+    TEST_FIXTURE(TestEnvironmentWith3Tasks, RemoveTask)
+    {
+        CHECK_EQUAL(0, pTask1->uiStep);
+        CHECK_EQUAL(0, pTask2->uiStep);
+        CHECK_EQUAL(0, pTask3->uiStep);
 
-		pTaskManager->killAllTasks();
+        CHECK_EQUAL(3, MockTask::uiTasksCount);
 
-		CHECK_EQUAL(3, CMockTask::uiTasksCount);
+        CHECK(!pTask2->mustBeKilled());
 
-		pTaskManager->step();
+        pTaskManager->removeTask(200);
 
-		CHECK_EQUAL(0, CMockTask::uiTasksCount);
-	}
+        CHECK(pTask2->mustBeKilled());
+
+        CHECK_EQUAL(3, MockTask::uiTasksCount);
+
+        pTaskManager->step();
+
+        CHECK_EQUAL(2, MockTask::uiTasksCount);
+
+        CHECK_EQUAL(1, pTask1->uiStep);
+        CHECK_EQUAL(2, pTask3->uiStep);
+    }
+
+
+    TEST_FIXTURE(TestEnvironmentWith3Tasks, KillAllTasks)
+    {
+        CHECK_EQUAL(3, MockTask::uiTasksCount);
+
+        pTaskManager->killAllTasks();
+
+        CHECK_EQUAL(3, MockTask::uiTasksCount);
+
+        pTaskManager->step();
+
+        CHECK_EQUAL(0, MockTask::uiTasksCount);
+    }
 }
 
