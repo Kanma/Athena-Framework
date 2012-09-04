@@ -97,6 +97,9 @@ namespace Athena
 
     /// Macro used to create a priority after a standard one
 #   define ATHENA_PRIORITY_AFTER(standard, offset)  (standard + TASK_RESERVED_INTERVAL + offset)
+
+
+    ATHENA_FRAMEWORK_SYMBOL extern const char* VERSION;
 }
 
 #endif

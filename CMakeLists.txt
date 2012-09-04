@@ -47,8 +47,8 @@ endif()
 
 set(ATHENA_FRAMEWORK_VERSION_MAJOR 1)
 set(ATHENA_FRAMEWORK_VERSION_MINOR 1)
-set(ATHENA_FRAMEWORK_VERSION_PATCH 1)
-set(ATHENA_FRAMEWORK_VERSION_SUFFIX "")
+set(ATHENA_FRAMEWORK_VERSION_PATCH 0)
+set(ATHENA_FRAMEWORK_VERSION_SUFFIX " (Dev)")
 
 
 ##########################################################################################
@@ -102,7 +102,18 @@ include("${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
 # Process subdirectories
 
 add_subdirectory(dependencies)
+
+if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
+    set(ATHENA_FRAMEWORK_SCRIPTING ON)
+else()
+    set(ATHENA_FRAMEWORK_SCRIPTING OFF)
+endif()
+
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(config)
 add_subdirectory(unittests)
+
+if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
+    add_subdirectory(scripting)
+endif()

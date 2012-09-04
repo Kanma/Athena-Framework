@@ -1,3 +1,8 @@
+# File generation
+configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/src/module.cpp.in
+               ${XMAKE_BINARY_DIR}/generated/Athena/module.cpp)
+
+
 # List the headers files
 set(HEADERS ${XMAKE_BINARY_DIR}/include/Athena/Config.h
            ../include/Athena/Configuration.h
@@ -18,7 +23,8 @@ set(HEADERS ${XMAKE_BINARY_DIR}/include/Athena/Config.h
 
 
 # List the source files
-set(SRCS Configuration.cpp
+set(SRCS ${XMAKE_BINARY_DIR}/generated/Athena/module.cpp
+         Configuration.cpp
          Engine.cpp
          GameStates/GameStateManager.cpp
          Tasks/GameStateTask.cpp
@@ -42,6 +48,10 @@ xmake_import_search_paths(ATHENA_GRAPHICS)
 xmake_import_search_paths(ATHENA_PHYSICS)
 xmake_import_search_paths(ATHENA_INPUTS)
 
+if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
+    xmake_import_search_paths(ATHENA_SCRIPTING)
+endif()
+
 
 # Declaration of the library
 if (NOT ATHENA_FRAMEWORK_STATIC)
@@ -51,12 +61,23 @@ if (NOT ATHENA_FRAMEWORK_STATIC)
                                  ${HEADERS} ${SRCS})
 
     xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_FRAMEWORK_EXPORTS")
+
+    if (APPLE)
+        xmake_add_to_property(ATHENA_FRAMEWORK LINK_FLAGS "-framework CoreFoundation -framework Carbon")
+    endif()
 else()
     xmake_create_static_library(ATHENA_FRAMEWORK Athena-Framework ${HEADERS} ${SRCS})
+
+    if (APPLE)
+        xmake_export_link_flags(ATHENA_FRAMEWORK "-framework CoreFoundation -framework Carbon")
+    endif()
 endif()
 
-xmake_project_link(ATHENA_FRAMEWORK ATHENA_GRAPHICS ATHENA_PHYSICS ATHENA_INPUTS)
+xmake_project_link(ATHENA_FRAMEWORK ATHENA_GRAPHICS ATHENA_PHYSICS ATHENA_INPUTS OGRE)
 
+if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
+    xmake_project_link(ATHENA_FRAMEWORK ATHENA_SCRIPTING)
+endif()
 
 # Exportations
 xmake_export_include_paths(ATHENA_FRAMEWORK ${INCLUDE_PATHS})
