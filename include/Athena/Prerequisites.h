@@ -1,6 +1,6 @@
 /** @file   Prerequisites.h
     @author Philip Abbet
-    
+
     Declaration of the types of the Athena Game Framework
 */
 
@@ -13,6 +13,18 @@
 #include <Athena/Config.h>
 
 
+/// Used to export symbols from the library
+#if (ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32) && !ATHENA_FRAMEWORK_STATIC
+#    ifdef ATHENA_FRAMEWORK_EXPORTS
+#        define ATHENA_FRAMEWORK_SYMBOL  __declspec(dllexport)
+#    else
+#        define ATHENA_FRAMEWORK_SYMBOL  __declspec(dllimport)
+#    endif
+#else
+#    define ATHENA_FRAMEWORK_SYMBOL
+#endif
+
+
 //----------------------------------------------------------------------------------------
 /// @brief	Main namespace. All the components of the Athena engine belongs to this
 ///			namespace
@@ -22,7 +34,7 @@ namespace Athena
     class Configuration;
     class Engine;
 
-    
+
 	//------------------------------------------------------------------------------------
 	/// @brief	Contains all the game states-related classes
 	//------------------------------------------------------------------------------------
@@ -39,14 +51,14 @@ namespace Athena
     {
         class Task;
         class TaskManager;
-        
+
         class GameStateTask;
         class GameStateStackTask;
         class GraphicsTask;
         class InputsTask;
         class TaskEnd;
         class TaskStart;
-        
+
         /// Represents the priority of a task
 		typedef unsigned int tPriority;
 	}

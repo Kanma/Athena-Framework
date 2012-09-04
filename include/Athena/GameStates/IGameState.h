@@ -15,7 +15,7 @@ namespace GameStates {
 //---------------------------------------------------------------------------------------
 /// @brief	Interface for the gamestates
 //---------------------------------------------------------------------------------------
-class ATHENA_SYMBOL IGameState
+class ATHENA_FRAMEWORK_SYMBOL IGameState
 {
 	//_____ Construction / Destruction __________
 public:

@@ -17,7 +17,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	Task that ticks the Inputs Unit each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL InputsTask: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL InputsTask: public Tasks::Task
 {
 	//_____ Construction / Destruction __________
 public:

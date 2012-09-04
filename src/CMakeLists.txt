@@ -26,14 +26,17 @@ xmake_import_search_paths(ATHENA_INPUTS)
 
 # Declaration of the library
 if (NOT ATHENA_FRAMEWORK_STATIC)
-    xmake_create_dynamic_library(ATHENA_FRAMEWORK Athena-Framework 1.0.0 1.0.0 ${SRCS})
+    xmake_create_dynamic_library(ATHENA_FRAMEWORK Athena-Framework
+                                 "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
+                                 "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
+                                 ${SRCS})
+
+    xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_FRAMEWORK_EXPORTS")
 else()
     xmake_create_static_library(ATHENA_FRAMEWORK Athena-Framework ${SRCS})
 endif()
 
 xmake_project_link(ATHENA_FRAMEWORK ATHENA_GRAPHICS ATHENA_PHYSICS ATHENA_INPUTS)
-
-xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_EXPORTS")
 
 
 # Exportations

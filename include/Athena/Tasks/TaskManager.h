@@ -34,7 +34,7 @@ namespace Tasks {
 /// 
 /// At shutdown, the destruction of the remaining tasks is handled by the manager.
 //---------------------------------------------------------------------------------------
-class ATHENA_SYMBOL TaskManager
+class ATHENA_FRAMEWORK_SYMBOL TaskManager
 {
 	//_____ Construction / Destruction __________
 public:

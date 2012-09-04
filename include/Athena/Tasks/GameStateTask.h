@@ -17,7 +17,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	Task that processes the current game state each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL GameStateTask: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL GameStateTask: public Tasks::Task
 {
 	//_____ Construction / Destruction __________
 public:

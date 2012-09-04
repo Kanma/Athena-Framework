@@ -104,7 +104,7 @@ struct tPhysicsConf
 //---------------------------------------------------------------------------------------
 /// @brief	Contains the configuration of the engine
 //---------------------------------------------------------------------------------------
-class ATHENA_SYMBOL Configuration
+class ATHENA_FRAMEWORK_SYMBOL Configuration
 {
 	//_____ Construction / Destruction __________
 public:

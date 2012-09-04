@@ -45,7 +45,7 @@ namespace GameStates {
 ///
 /// At shutdown, the destruction of the remaining gamestates is handled by the manager.
 //---------------------------------------------------------------------------------------
-class ATHENA_SYMBOL GameStateManager
+class ATHENA_FRAMEWORK_SYMBOL GameStateManager
 {
 	//_____ Construction / Destruction __________
 public:

@@ -16,7 +16,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	Base class for all the tasks
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL Task
+class ATHENA_FRAMEWORK_SYMBOL Task
 {
 	//_____ Construction / Destruction __________
 public:

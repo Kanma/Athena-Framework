@@ -17,7 +17,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	Task that updates the physical simulations each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL PhysicsTask: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL PhysicsTask: public Tasks::Task
 {
 	//_____ Construction / Destruction __________
 public:

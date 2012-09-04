@@ -43,6 +43,15 @@ endif()
 
 
 ##########################################################################################
+# Library version
+
+set(ATHENA_FRAMEWORK_VERSION_MAJOR 1)
+set(ATHENA_FRAMEWORK_VERSION_MINOR 1)
+set(ATHENA_FRAMEWORK_VERSION_PATCH 1)
+set(ATHENA_FRAMEWORK_VERSION_SUFFIX "")
+
+
+##########################################################################################
 # XMake-related settings
 
 # Set the output paths

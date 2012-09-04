@@ -29,7 +29,7 @@ namespace Athena {
 ///
 /// This class is a singleton.
 //---------------------------------------------------------------------------------------
-class ATHENA_SYMBOL Engine: public Utils::Singleton<Engine>
+class ATHENA_FRAMEWORK_SYMBOL Engine: public Utils::Singleton<Engine>
 {
 	//_____ Construction / Destruction __________
 public:

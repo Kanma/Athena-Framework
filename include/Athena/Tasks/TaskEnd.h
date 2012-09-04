@@ -17,7 +17,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	Last task executed each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL TaskEnd: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL TaskEnd: public Tasks::Task
 {
 	//_____ Construction / Destruction __________
 public:

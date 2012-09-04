@@ -17,7 +17,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	First task executed each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL TaskStart: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL TaskStart: public Tasks::Task
 {
 	//_____ Construction / Destruction __________
 public:

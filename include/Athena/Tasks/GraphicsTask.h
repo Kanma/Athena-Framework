@@ -17,7 +17,7 @@ namespace Tasks {
 //-----------------------------------------------------------------------------------
 /// @brief	Task that updates the rendering each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL GraphicsTask: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL GraphicsTask: public Tasks::Task
 {
 	//_____ Construction / Destruction __________
 public:
