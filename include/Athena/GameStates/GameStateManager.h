@@ -36,12 +36,12 @@ namespace GameStates {
 /// Note that the Task Manager (Athena::Tasks::TaskManager) will stop the game when the
 /// stack is empty!
 ///
-/// It is also good to know that the update of the stack isn't done immediatly (when one
-/// of these actions are requested), but later, at the end of the frame (see CGameStateTask2).
-/// This is because a change of active gamestate at anytime can cause huge problems
-/// in the other subsystems if special care isn't taken. With that delayed mecanism,
-/// every subsystem has finished its processing for the current frame, and so is ready
-/// to handle a change of the active gamestate.
+/// It is also good to know that the update of the stack isn't done immediately (when one
+/// of these actions are requested), but later, at the end of the frame (see
+/// GameStateStackTask). This is because a change of active gamestate at anytime can cause
+/// huge problems in the other subsystems if special care isn't taken. With that delayed
+/// mecanism, every subsystem has finished its processing for the current frame, and so is
+/// ready to handle a change of the active gamestate.
 ///
 /// At shutdown, the destruction of the remaining gamestates is handled by the manager.
 //---------------------------------------------------------------------------------------
