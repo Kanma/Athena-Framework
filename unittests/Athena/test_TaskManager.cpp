@@ -1,6 +1,8 @@
 #include <UnitTest++.h>
 #include <Athena/Tasks/TaskManager.h>
 #include <Athena-Core/Log/LogManager.h>
+#include <Athena-Core/Log/LogManager.h>
+#include <Athena-Core/Log/XMLLogListener.h>
 #include "mocks/Task.h"
 
 using namespace Athena;
@@ -23,7 +25,7 @@ struct TestEnvironment
 	{
 		delete pTaskManager;
 	}
-	
+
     TaskManager* pTaskManager;
 };
 
@@ -71,6 +73,10 @@ SUITE(TaskManager)
 
 	TEST_FIXTURE(TestEnvironment, AddTasksWithSamePriorityFail)
 	{
+        // Disable error output on stderr
+        Athena::Log::LogManager logManager;
+        logManager.addListener(new XMLLogListener("test_log.xml"), true);
+
 		CHECK(pTaskManager->addTask(100, new CMockTask()));
 		CHECK(!pTaskManager->addTask(100, new CMockTask()));
 	}
@@ -78,8 +84,12 @@ SUITE(TaskManager)
 
 	TEST_FIXTURE(TestEnvironment, AddTasksWhichFailToStartFail)
 	{
+        // Disable error output on stderr
+        Athena::Log::LogManager logManager;
+        logManager.addListener(new XMLLogListener("test_log.xml"), true);
+
 		CHECK(pTaskManager->addTask(100, new CMockTask()));
-		
+
 		CMockTask* pTask = new CMockTask();
 		pTask->bCanStart = false;
 		CHECK(!pTaskManager->addTask(200, pTask));

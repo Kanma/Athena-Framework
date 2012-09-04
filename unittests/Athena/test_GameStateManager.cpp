@@ -1,6 +1,8 @@
 #include <UnitTest++.h>
 #include <Athena/GameStates/GameStateManager.h>
 #include <Athena/Tasks/TaskManager.h>
+#include <Athena-Core/Log/LogManager.h>
+#include <Athena-Core/Log/XMLLogListener.h>
 #include "mocks/GameState.h"
 
 using namespace Athena;
@@ -12,7 +14,7 @@ using namespace Ogre;
 struct GameStatesTestEnvironment
 {
     GameStateManager* pGameStateManager;
-    
+
 	GameStatesTestEnvironment()
 	{
 		pGameStateManager = new GameStateManager();
@@ -83,6 +85,10 @@ SUITE(GameStatesManager)
 
 	TEST_FIXTURE(GameStatesTestEnvironment, RegisterStatesWithSameIDFail)
 	{
+        // Disable error output on stderr
+        Athena::Log::LogManager logManager;
+        logManager.addListener(new XMLLogListener("test_log.xml"), true);
+
 		CHECK(pGameStateManager->registerState(1, new CMockGameState()));
 		CHECK(!pGameStateManager->registerState(1, new CMockGameState()));
 	}
@@ -225,7 +231,7 @@ SUITE(GameStatesManager)
 		CHECK(pState3->bEnterCalled);
 	}
 
-    
+
 	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, ProcessCurrent)
 	{
 		pGameStateManager->pushState(1);
