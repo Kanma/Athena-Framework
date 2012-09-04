@@ -1,7 +1,7 @@
-/**	@file	GameStateStackTask.h
-	@author	Philip Abbet
+/** @file   GameStateStackTask.h
+    @author Philip Abbet
 
-	Declaration of the class 'Athena::Tasks::GameStateStackTask'
+    Declaration of the class 'Athena::Tasks::GameStateStackTask'
 */
 
 #ifndef _ATHENA_TASKS_GAMESTATESTACKTASK_H
@@ -15,42 +15,42 @@ namespace Athena {
 namespace Tasks {
 
 //-----------------------------------------------------------------------------------
-/// @brief	Task that manages the stack of game states
+/// @brief  Task that manages the stack of game states
 //-----------------------------------------------------------------------------------
 class ATHENA_FRAMEWORK_SYMBOL GameStateStackTask: public Tasks::Task
 {
-	//_____ Construction / Destruction __________
+    //_____ Construction / Destruction __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Constructor
+    /// @brief  Constructor
     ///
     /// @param  pGameStateManager   The Game State Manager to control
     //-----------------------------------------------------------------------------------
-	GameStateStackTask(GameStates::GameStateManager* pGameStateManager);
+    GameStateStackTask(GameStates::GameStateManager* pGameStateManager);
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Destructor
+    /// @brief  Destructor
     //-----------------------------------------------------------------------------------
-	virtual ~GameStateStackTask();
+    virtual ~GameStateStackTask();
 
 
-	//_____ Management of the task __________
+    //_____ Management of the task __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Start the task
-    /// @return	'true' if successful
+    /// @brief  Start the task
+    /// @return 'true' if successful
     //-----------------------------------------------------------------------------------
-	virtual bool start();
+    virtual bool start();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Called each time the task must perform its job
+    /// @brief  Called each time the task must perform its job
     //-----------------------------------------------------------------------------------
-	virtual void update();
+    virtual void update();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Stop the task
+    /// @brief  Stop the task
     //-----------------------------------------------------------------------------------
-	virtual void stop();
+    virtual void stop();
 
 
     //_____ Attributes __________

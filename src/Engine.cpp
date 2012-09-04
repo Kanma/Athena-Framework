@@ -1,7 +1,7 @@
-/**	@file	Engine.cpp
-	@author	Philip Abbet
+/** @file   Engine.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Engine'
+    Implementation of the class 'Athena::Engine'
 */
 
 #include <Athena/Engine.h>
@@ -64,7 +64,7 @@ using Ogre::Root;
 /************************************** CONSTANTS **************************************/
 
 /// Context used for logging
-static const char*	__CONTEXT__ = "Engine";
+static const char*  __CONTEXT__ = "Engine";
 
 
 /********************************** STATIC ATTRIBUTES **********************************/
@@ -87,18 +87,18 @@ std::string macBundlePath()
     char path[1024];
     CFBundleRef mainBundle = CFBundleGetMainBundle();
     assert(mainBundle);
-	
+
     CFURLRef mainBundleURL = CFBundleCopyBundleURL(mainBundle);
     assert(mainBundleURL);
-	
+
     CFStringRef cfStringRef = CFURLCopyFileSystemPath( mainBundleURL, kCFURLPOSIXPathStyle);
     assert(cfStringRef);
-	
+
     CFStringGetCString(cfStringRef, path, 1024, kCFStringEncodingASCII);
-	
+
     CFRelease(mainBundleURL);
     CFRelease(cfStringRef);
-	
+
     return std::string(path);
 }
 
@@ -117,21 +117,21 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	destroy();
+    destroy();
 }
 
 //---------------------------------------------------------------------
 
 Engine& Engine::getSingleton()
 {
-	return Singleton<Engine>::getSingleton();
+    return Singleton<Engine>::getSingleton();
 }
 
 //---------------------------------------------------------------------
 
 Engine* Engine::getSingletonPtr()
 {
-	return Singleton<Engine>::getSingletonPtr();
+    return Singleton<Engine>::getSingletonPtr();
 }
 
 
@@ -139,23 +139,23 @@ Engine* Engine::getSingletonPtr()
 
 void Engine::setup(const std::string& strConfigFile)
 {
-	// Assertions
-	assert(!strConfigFile.empty() && "No configuration file supplied");
+    // Assertions
+    assert(!strConfigFile.empty() && "No configuration file supplied");
 
-	// Open the configuration file
-	m_configuration.load(strConfigFile);
+    // Open the configuration file
+    m_configuration.load(strConfigFile);
 
-	setup();
+    setup();
 }
 
 //---------------------------------------------------------------------
 
 void Engine::setup(const Configuration& configuration)
 {
-	// Copy the configuration
-	m_configuration = configuration;
+    // Copy the configuration
+    m_configuration = configuration;
 
-	setup();
+    setup();
 }
 
 //---------------------------------------------------------------------
@@ -163,176 +163,176 @@ void Engine::setup(const Configuration& configuration)
 void Engine::setup()
 {
     LogManager* pLogManager = LogManager::getSingletonPtr();
-    
-	// Create the log manager if it isn't already done
-	if (!pLogManager)
-	{
-		pLogManager = new LogManager();
-		
-		if (!m_configuration.log.strAthenaLogFile.empty())
-		{
-			// TODO: Create the right kind of listener, depending of the value of (m_configuration.log.strAthenaLogKind
 
-			XMLLogListener* pLogListener = new XMLLogListener(m_configuration.log.strAthenaLogFile);
+    // Create the log manager if it isn't already done
+    if (!pLogManager)
+    {
+        pLogManager = new LogManager();
 
-			if (pLogListener->isFileOpen())
-				pLogManager->addListener(pLogListener, true);
-			else
-				delete pLogListener;
-		}
-	}
+        if (!m_configuration.log.strAthenaLogFile.empty())
+        {
+            // TODO: Create the right kind of listener, depending of the value of (m_configuration.log.strAthenaLogKind
 
-	ATHENA_LOG_EVENT("Creation of the engine");
+            XMLLogListener* pLogListener = new XMLLogListener(m_configuration.log.strAthenaLogFile);
 
-	try
-	{
-		// If the ogre log isn't already created, use the configuration
-		if (!Ogre::LogManager::getSingletonPtr())
-		{
-			// Create the Ogre's log manager
-			Ogre::LogManager* pOgreLogManager = new Ogre::LogManager();
-			m_bOwnOgreLogManager = true;
+            if (pLogListener->isFileOpen())
+                pLogManager->addListener(pLogListener, true);
+            else
+                delete pLogListener;
+        }
+    }
 
-			// Test if we must create a real file, or a pure redirection to the Athena's log system
-			Ogre::Log* pLog = 0;
-			if (!m_configuration.log.strOgreLogFile.empty())
-				pLog = pOgreLogManager->createLog(m_configuration.log.strOgreLogFile, true, true);
-			else if (m_configuration.log.bRedirectOgreLog)
-				pLog = pOgreLogManager->createLog("Ogre.log", true, true, true);
+    ATHENA_LOG_EVENT("Creation of the engine");
 
-			// Test if we must create a redirection to the Athena's log system
-			if (pLog && m_configuration.log.bRedirectOgreLog)
-			{
+    try
+    {
+        // If the ogre log isn't already created, use the configuration
+        if (!Ogre::LogManager::getSingletonPtr())
+        {
+            // Create the Ogre's log manager
+            Ogre::LogManager* pOgreLogManager = new Ogre::LogManager();
+            m_bOwnOgreLogManager = true;
+
+            // Test if we must create a real file, or a pure redirection to the Athena's log system
+            Ogre::Log* pLog = 0;
+            if (!m_configuration.log.strOgreLogFile.empty())
+                pLog = pOgreLogManager->createLog(m_configuration.log.strOgreLogFile, true, true);
+            else if (m_configuration.log.bRedirectOgreLog)
+                pLog = pOgreLogManager->createLog("Ogre.log", true, true, true);
+
+            // Test if we must create a redirection to the Athena's log system
+            if (pLog && m_configuration.log.bRedirectOgreLog)
+            {
                 m_pOgreLogListener = new OgreLogListener();
-				pLog->addListener(m_pOgreLogListener);
-		    }
-		}
-		else
-		{
-			m_bOwnOgreLogManager = false;
-		}
+                pLog->addListener(m_pOgreLogListener);
+            }
+        }
+        else
+        {
+            m_bOwnOgreLogManager = false;
+        }
 
-		// Create the Task Manager
-		m_pTaskManager = new TaskManager();
+        // Create the Task Manager
+        m_pTaskManager = new TaskManager();
 
-		// Create the Game State Manager
-		m_pGameStateManager = new GameStateManager();
+        // Create the Game State Manager
+        m_pGameStateManager = new GameStateManager();
         m_pGameStateManager->setTaskManager(m_pTaskManager);
 
-		// Create the Scenes Manager
-		m_pScenesManager = new ScenesManager();
+        // Create the Scenes Manager
+        m_pScenesManager = new ScenesManager();
 
-		// Create the Components Manager
-		m_pComponentsManager = new ComponentsManager();
+        // Create the Components Manager
+        m_pComponentsManager = new ComponentsManager();
 
-		// Initializes the Graphics module & Ogre
-		assert(!m_configuration.athena.strPluginsFile.empty());
-		assert(!m_configuration.athena.strOgreConfigFile.empty());
-		Root* pOgreRoot = Graphics::initialize(m_configuration.athena.strPluginsFile,
-		                                       m_configuration.athena.strOgreConfigFile,
-							                   (m_configuration.log.strOgreLogFile.empty() ? "Ogre.log" : m_configuration.log.strOgreLogFile));
+        // Initializes the Graphics module & Ogre
+        assert(!m_configuration.athena.strPluginsFile.empty());
+        assert(!m_configuration.athena.strOgreConfigFile.empty());
+        Root* pOgreRoot = Graphics::initialize(m_configuration.athena.strPluginsFile,
+                                               m_configuration.athena.strOgreConfigFile,
+                                               (m_configuration.log.strOgreLogFile.empty() ? "Ogre.log" : m_configuration.log.strOgreLogFile));
 
-		// Load config settings from ogre.cfg
-		if (!pOgreRoot->restoreConfig())
-		{
-			// If there is no config file, show the configuration dialog
-			if (!pOgreRoot->showConfigDialog())
-			{
-				OGRE_EXCEPT(0,
-							"Failed to process '" + m_configuration.athena.strOgreConfigFile + "'",
-							__FUNCTION__);
-			}
-		}
+        // Load config settings from ogre.cfg
+        if (!pOgreRoot->restoreConfig())
+        {
+            // If there is no config file, show the configuration dialog
+            if (!pOgreRoot->showConfigDialog())
+            {
+                OGRE_EXCEPT(0,
+                            "Failed to process '" + m_configuration.athena.strOgreConfigFile + "'",
+                            __FUNCTION__);
+            }
+        }
 
-		// Setup the resources if a file was supplied
-		if (!m_configuration.athena.strResourcesFile.empty())
-			setupResources(m_configuration.athena.strResourcesFile);
+        // Setup the resources if a file was supplied
+        if (!m_configuration.athena.strResourcesFile.empty())
+            setupResources(m_configuration.athena.strResourcesFile);
 
-		// Initialise and create a default rendering window (if necessary)
-		if (m_configuration.defaultWindow.bEnable)
-		{
-			if (m_configuration.defaultWindow.strTitle.empty())
-				m_pMainWindow = pOgreRoot->initialise(true);
-			else
-				m_pMainWindow = pOgreRoot->initialise(true, m_configuration.defaultWindow.strTitle);
+        // Initialise and create a default rendering window (if necessary)
+        if (m_configuration.defaultWindow.bEnable)
+        {
+            if (m_configuration.defaultWindow.strTitle.empty())
+                m_pMainWindow = pOgreRoot->initialise(true);
+            else
+                m_pMainWindow = pOgreRoot->initialise(true, m_configuration.defaultWindow.strTitle);
 
-			// Initialise the resources, parse scripts, etc
-			ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-		}
-		else
-		{
-			pOgreRoot->initialise(false);
-		}
+            // Initialise the resources, parse scripts, etc
+            ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+        }
+        else
+        {
+            pOgreRoot->initialise(false);
+        }
 
         // Initialize the Physics module
         if (m_configuration.physics.bEnable)
             Physics::initialize();
 
-		// Create the standard tasks
-		m_pTaskManager->addTask(TASK_START,             new TaskStart());
-		m_pTaskManager->addTask(TASK_GRAPHICS,          new GraphicsTask());
-		m_pTaskManager->addTask(TASK_GAMESTATE,         new GameStateTask(m_pGameStateManager));
-		m_pTaskManager->addTask(TASK_GAMESTATESTACK,    new GameStateStackTask(m_pGameStateManager));
-		m_pTaskManager->addTask(TASK_END,               new TaskEnd());
+        // Create the standard tasks
+        m_pTaskManager->addTask(TASK_START,             new TaskStart());
+        m_pTaskManager->addTask(TASK_GRAPHICS,          new GraphicsTask());
+        m_pTaskManager->addTask(TASK_GAMESTATE,         new GameStateTask(m_pGameStateManager));
+        m_pTaskManager->addTask(TASK_GAMESTATESTACK,    new GameStateStackTask(m_pGameStateManager));
+        m_pTaskManager->addTask(TASK_END,               new TaskEnd());
 
         if (m_configuration.physics.bEnable)
-		    m_pTaskManager->addTask(TASK_PHYSICS, new PhysicsTask());
-		
-		// Create the inputs unit
-		if (m_pMainWindow && m_configuration.inputs.bEnable)
-			createInputsUnit();
+            m_pTaskManager->addTask(TASK_PHYSICS, new PhysicsTask());
 
-		// Create the GUI manager
+        // Create the inputs unit
+        if (m_pMainWindow && m_configuration.inputs.bEnable)
+            createInputsUnit();
+
+        // Create the GUI manager
         // if (pMainWindow && m_configuration.gui.bEnable && m_configuration.inputs.bEnable)
         //  new CGUIManager();
 
-		// Create the audio manager
+        // Create the audio manager
         // if (m_configuration.audio.bEnable)
         //  new CAudioManager();
-        
-		// Create the network manager
+
+        // Create the network manager
         // if (m_configuration.network.bEnable)
         // {
         //  new CNetworkManager();
         //  pTasksManager->addTask(TASK_NETWORK, new CNetworkTask());
         // }
 
-		// Create the scripting manager
+        // Create the scripting manager
         // if (m_configuration.scripting.bEnable)
         // {
         //  new CScriptingManager();
-        // 
+        //
         //  // Execute the startup script if any
         //  if (!m_configuration.scripting.strStartupScript.empty())
         //      pScriptingManager->executeFile(m_configuration.scripting.strStartupScript);
         // }
-	}
-	catch (Ogre::Exception& ex)
-	{
-		destroy();
+    }
+    catch (Ogre::Exception& ex)
+    {
+        destroy();
 
-		throw(Ogre::Exception(ex));
-	}
-	catch (...)
-	{
-		destroy();
+        throw(Ogre::Exception(ex));
+    }
+    catch (...)
+    {
+        destroy();
 
-		OGRE_EXCEPT(0, "Failed to create the engine, unknown exception", __FUNCTION__);
-	}
+        OGRE_EXCEPT(0, "Failed to create the engine, unknown exception", __FUNCTION__);
+    }
 }
 
 //---------------------------------------------------------------------
 
 const Configuration* Engine::getConfiguration() const
 {
-	return &m_configuration;
+    return &m_configuration;
 }
 
 //---------------------------------------------------------------------
 
 void Engine::destroy()
 {
-	ATHENA_LOG_EVENT("Destruction of the engine");
+    ATHENA_LOG_EVENT("Destruction of the engine");
 
     // delete pNetworkManager;
     // pNetworkManager = 0;
@@ -346,152 +346,152 @@ void Engine::destroy()
     // delete pScriptingManager;
     // pScriptingManager = 0;
 
-	delete m_pInputsUnit;
-	m_pInputsUnit = 0;
+    delete m_pInputsUnit;
+    m_pInputsUnit = 0;
 
-	delete m_pTaskManager;
-	m_pTaskManager = 0;
+    delete m_pTaskManager;
+    m_pTaskManager = 0;
 
-	delete m_pGameStateManager;
-	m_pGameStateManager = 0;
+    delete m_pGameStateManager;
+    m_pGameStateManager = 0;
 
     // delete pBehaviorsManager;
     // pBehaviorsManager = 0;
 
-	delete m_pScenesManager;
-	m_pScenesManager = 0;
+    delete m_pScenesManager;
+    m_pScenesManager = 0;
 
-	delete m_pComponentsManager;
-	m_pComponentsManager = 0;
+    delete m_pComponentsManager;
+    m_pComponentsManager = 0;
 
-	if (Root::getSingletonPtr())
-	{
-		Root::getSingletonPtr()->shutdown();
-		delete Root::getSingletonPtr();
-		m_pMainWindow	= 0;
-	}
+    if (Root::getSingletonPtr())
+    {
+        Root::getSingletonPtr()->shutdown();
+        delete Root::getSingletonPtr();
+        m_pMainWindow   = 0;
+    }
 
-	if (m_bOwnOgreLogManager)
-	{
-		delete LogManager::getSingletonPtr();
+    if (m_bOwnOgreLogManager)
+    {
+        delete LogManager::getSingletonPtr();
         delete m_pOgreLogListener;
         m_pOgreLogListener = 0;
-	}
-	
-	delete LogManager::getSingletonPtr();
+    }
+
+    delete LogManager::getSingletonPtr();
 }
 
 //---------------------------------------------------------------------
 
 void Engine::setupResources(const std::string& strFileName)
 {
-	// Declarations
-	Ogre::ConfigFile	cfgFile;
-    string		        strSecName, strTypeName, strArchName;
+    // Declarations
+    Ogre::ConfigFile    cfgFile;
+    string              strSecName, strTypeName, strArchName;
 
-	// Load resource paths from config file
-	cfgFile.load(strFileName);
+    // Load resource paths from config file
+    cfgFile.load(strFileName);
 
-	// Go through all sections & settings in the file
-	Ogre::ConfigFile::SectionIterator sectionIter = cfgFile.getSectionIterator();
-	while (sectionIter.hasMoreElements())
-	{
-		strSecName = sectionIter.peekNextKey();
-		Ogre::ConfigFile::SettingsMultiMap* settings = sectionIter.getNext();
-		Ogre::ConfigFile::SettingsMultiMap::iterator i;
-		for (i = settings->begin(); i != settings->end(); ++i)
-		{
-			strTypeName = i->first;
-			strArchName = i->second;
+    // Go through all sections & settings in the file
+    Ogre::ConfigFile::SectionIterator sectionIter = cfgFile.getSectionIterator();
+    while (sectionIter.hasMoreElements())
+    {
+        strSecName = sectionIter.peekNextKey();
+        Ogre::ConfigFile::SettingsMultiMap* settings = sectionIter.getNext();
+        Ogre::ConfigFile::SettingsMultiMap::iterator i;
+        for (i = settings->begin(); i != settings->end(); ++i)
+        {
+            strTypeName = i->first;
+            strArchName = i->second;
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-			// OS X does not set the working directory relative to the app,
-			// In order to make things portable on OS X we need to provide
-			// the loading with it's own bundle path location
-			ResourceGroupManager::getSingleton().addResourceLocation(string(macBundlePath() + "/" + strArchName),
-																	 strTypeName, strSecName);
+            // OS X does not set the working directory relative to the app,
+            // In order to make things portable on OS X we need to provide
+            // the loading with it's own bundle path location
+            ResourceGroupManager::getSingleton().addResourceLocation(string(macBundlePath() + "/" + strArchName),
+                                                                     strTypeName, strSecName);
 #else
-			ResourceGroupManager::getSingleton().addResourceLocation(strArchName, strTypeName, strSecName);
+            ResourceGroupManager::getSingleton().addResourceLocation(strArchName, strTypeName, strSecName);
 #endif
-		}
-	}
+        }
+    }
 }
 
 //---------------------------------------------------------------------
 
 RenderWindow* Engine::createRenderWindow(size_t existingwindowhandle, const std::string& strName,
-										 int width, int height, bool fullscreen)
+                                         int width, int height, bool fullscreen)
 {
-	// Declarations
-	NameValuePairList miscParams;
-	RenderWindow*	  theWindow;
+    // Declarations
+    NameValuePairList miscParams;
+    RenderWindow*     theWindow;
 
-	miscParams["externalWindowHandle"] = StringConverter::toString(existingwindowhandle);
+    miscParams["externalWindowHandle"] = StringConverter::toString(existingwindowhandle);
 
     #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-    	miscParams["macAPI"] = "cocoa";
+        miscParams["macAPI"] = "cocoa";
     #endif
 
-	theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
+    theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
 
-	if (!m_pMainWindow)
-	{
-		m_pMainWindow = theWindow;
+    if (!m_pMainWindow)
+    {
+        m_pMainWindow = theWindow;
 
-		// Initialise the resources, parse scripts, etc
-		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+        // Initialise the resources, parse scripts, etc
+        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-		if (m_configuration.inputs.bEnable)
-			createInputsUnit();
+        if (m_configuration.inputs.bEnable)
+            createInputsUnit();
 
         // if (m_configuration.gui.bEnable && m_configuration.inputs.bEnable)
         //  new CGUIManager();
-	}
+    }
 
-	return theWindow;
+    return theWindow;
 }
 
 //---------------------------------------------------------------------
 
 RenderWindow* Engine::createRenderWindow(const std::string& strName,
-										 const std::string& strTitle,
-										 int width, int height, bool fullscreen)
+                                         const std::string& strTitle,
+                                         int width, int height, bool fullscreen)
 {
-	// Declarations
-	NameValuePairList miscParams;
-	RenderWindow*	  theWindow;
+    // Declarations
+    NameValuePairList miscParams;
+    RenderWindow*     theWindow;
 
-	miscParams["title"] = strTitle;
-		
-	theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
+    miscParams["title"] = strTitle;
 
-	if (!m_pMainWindow)
-	{
-		m_pMainWindow = theWindow;
+    theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
 
-		// Initialise the resources, parse scripts, etc
-		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    if (!m_pMainWindow)
+    {
+        m_pMainWindow = theWindow;
 
-		if (m_configuration.inputs.bEnable)
-			createInputsUnit();
+        // Initialise the resources, parse scripts, etc
+        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+        if (m_configuration.inputs.bEnable)
+            createInputsUnit();
 
         // if (m_configuration.gui.bEnable && m_configuration.inputs.bEnable)
         //  new CGUIManager();
-	}
+    }
 
-	return theWindow;
+    return theWindow;
 }
 
 //---------------------------------------------------------------------
 
 void Engine::createInputsUnit()
 {
-	assert(!m_pInputsUnit);
-	assert(m_pMainWindow);
+    assert(!m_pInputsUnit);
+    assert(m_pMainWindow);
 
-	m_pInputsUnit = new InputsUnit();
+    m_pInputsUnit = new InputsUnit();
 
-	if (m_pInputsUnit->init(m_pMainWindow))
-	{
+    if (m_pInputsUnit->init(m_pMainWindow))
+    {
         // // Load the virtual controllers if necessary
         // if (!m_configuration.inputs.strVirtualControllersFile.empty() &&
         //  !pInputsUnit->loadVirtualControllers(m_configuration.inputs.strVirtualControllersFile))
@@ -499,13 +499,13 @@ void Engine::createInputsUnit()
         //  ATHENA_LOG_ERROR("Failed to load the virtual controllers");
         // }
 
-		m_pTaskManager->addTask(TASK_INPUTS, new InputsTask());
-	}
-	else
-	{
-		delete m_pInputsUnit;
-		m_pInputsUnit = 0;
+        m_pTaskManager->addTask(TASK_INPUTS, new InputsTask());
+    }
+    else
+    {
+        delete m_pInputsUnit;
+        m_pInputsUnit = 0;
 
-		ATHENA_LOG_ERROR("Failed to create the Inputs Unit");
-	}
+        ATHENA_LOG_ERROR("Failed to create the Inputs Unit");
+    }
 }

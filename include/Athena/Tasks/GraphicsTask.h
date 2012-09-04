@@ -1,7 +1,7 @@
-/**	@file	GraphicsTask.h
-	@author	Philip Abbet
+/** @file   GraphicsTask.h
+    @author Philip Abbet
 
-	Declaration of the class 'Athena::Tasks::GraphicsTask'
+    Declaration of the class 'Athena::Tasks::GraphicsTask'
 */
 
 #ifndef _ATHENA_TASKS_GRAPHICSTASK_H
@@ -15,40 +15,40 @@ namespace Athena {
 namespace Tasks {
 
 //-----------------------------------------------------------------------------------
-/// @brief	Task that updates the rendering each frame
+/// @brief  Task that updates the rendering each frame
 //-----------------------------------------------------------------------------------
 class ATHENA_FRAMEWORK_SYMBOL GraphicsTask: public Tasks::Task
 {
-	//_____ Construction / Destruction __________
+    //_____ Construction / Destruction __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Constructor
+    /// @brief  Constructor
     //-----------------------------------------------------------------------------------
-	GraphicsTask();
+    GraphicsTask();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Destructor
+    /// @brief  Destructor
     //-----------------------------------------------------------------------------------
-	virtual ~GraphicsTask();
+    virtual ~GraphicsTask();
 
 
-	//_____ Management of the task __________
+    //_____ Management of the task __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Start the task
-    /// @return	'true' if successful
+    /// @brief  Start the task
+    /// @return 'true' if successful
     //-----------------------------------------------------------------------------------
-	virtual bool start();
+    virtual bool start();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Called each time the task must perform its job
+    /// @brief  Called each time the task must perform its job
     //-----------------------------------------------------------------------------------
-	virtual void update();
+    virtual void update();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Stop the task
+    /// @brief  Stop the task
     //-----------------------------------------------------------------------------------
-	virtual void stop();
+    virtual void stop();
 };
 
 }

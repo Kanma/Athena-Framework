@@ -1,7 +1,7 @@
-/** @file	GameStateTask.cpp
-	@author	Philip Abbet
+/** @file   GameStateTask.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::GameStateTask'
+    Implementation of the class 'Athena::Tasks::GameStateTask'
 */
 
 #include <Athena/Tasks/GameStateTask.h>
@@ -31,14 +31,14 @@ GameStateTask::~GameStateTask()
 
 bool GameStateTask::start()
 {
-	return true;
+    return true;
 }
 
 //---------------------------------------------------------------------
 
 void GameStateTask::update()
 {
-	m_pGameStateManager->processCurrentState();
+    m_pGameStateManager->processCurrentState();
 }
 
 //---------------------------------------------------------------------

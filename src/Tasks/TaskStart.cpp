@@ -1,7 +1,7 @@
-/** @file	TaskStart.cpp
-	@author	Philip Abbet
+/** @file   TaskStart.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::TaskStart'
+    Implementation of the class 'Athena::Tasks::TaskStart'
 */
 
 #include <Athena/Tasks/TaskStart.h>
@@ -29,17 +29,17 @@ TaskStart::~TaskStart()
 
 bool TaskStart::start()
 {
-	// Assertions
-	assert(Ogre::Root::getSingletonPtr());
+    // Assertions
+    assert(Ogre::Root::getSingletonPtr());
 
-	return true;
+    return true;
 }
 
 //---------------------------------------------------------------------
 
 void TaskStart::update()
 {
-	Ogre::Root::getSingletonPtr()->_fireFrameStarted();
+    Ogre::Root::getSingletonPtr()->_fireFrameStarted();
 }
 
 //---------------------------------------------------------------------

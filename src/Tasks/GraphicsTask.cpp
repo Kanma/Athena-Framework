@@ -1,7 +1,7 @@
-/** @file	GraphicsTask.cpp
-	@author	Philip Abbet
+/** @file   GraphicsTask.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::GraphicsTask'
+    Implementation of the class 'Athena::Tasks::GraphicsTask'
 */
 
 #include <Athena/Tasks/GraphicsTask.h>
@@ -43,10 +43,10 @@ GraphicsTask::~GraphicsTask()
 
 bool GraphicsTask::start()
 {
-	// Assertions
-	assert(Ogre::Root::getSingletonPtr());
+    // Assertions
+    assert(Ogre::Root::getSingletonPtr());
 
-	return true;
+    return true;
 }
 
 //---------------------------------------------------------------------
@@ -56,11 +56,11 @@ void GraphicsTask::update()
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     // Pump events on Win32
     MSG msg;
-	while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+    while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
 #endif
 
     ScenesManager::tScenesIterator iter = ScenesManager::getSingletonPtr()->getScenesIterator();
@@ -74,8 +74,8 @@ void GraphicsTask::update()
                 pWorld->getSceneManager()->_updateSceneGraph(0);
         }
     }
-    
-	Ogre::Root::getSingletonPtr()->_updateAllRenderTargets();
+
+    Ogre::Root::getSingletonPtr()->_updateAllRenderTargets();
 }
 
 //---------------------------------------------------------------------

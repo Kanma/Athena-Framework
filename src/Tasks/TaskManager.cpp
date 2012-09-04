@@ -1,7 +1,7 @@
-/**	@file	TasksManager.cpp
-	@author	Philip Abbet
+/** @file   TasksManager.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::TasksManager'
+    Implementation of the class 'Athena::Tasks::TasksManager'
 */
 
 #include <Athena/Tasks/TaskManager.h>
@@ -41,21 +41,21 @@ TaskManager::TaskManager()
 : m_ulMicroseconds(0), m_ulMilliseconds(0), m_ulElapsedMicroseconds(0),
   m_ulElapsedMilliseconds(0), m_fElapsedSeconds(0.0f)
 {
-	ATHENA_LOG_EVENT("Creation");
+    ATHENA_LOG_EVENT("Creation");
 }
 
 //---------------------------------------------------------------------
 
 TaskManager::~TaskManager()
 {
-	ATHENA_LOG_EVENT("Destruction");
+    ATHENA_LOG_EVENT("Destruction");
 
-	// Declarations
-	tTasksIterator	iter, iterEnd;
+    // Declarations
+    tTasksIterator  iter, iterEnd;
 
-	// Process each task
-	for (iter = m_tasks.begin(), iterEnd = m_tasks.end(); iter != iterEnd; ++iter)
-		delete iter->second;
+    // Process each task
+    for (iter = m_tasks.begin(), iterEnd = m_tasks.end(); iter != iterEnd; ++iter)
+        delete iter->second;
 }
 
 
@@ -63,7 +63,7 @@ TaskManager::~TaskManager()
 
 void TaskManager::execute()
 {
-	ATHENA_LOG_EVENT("Starts the execution");
+    ATHENA_LOG_EVENT("Starts the execution");
 
     ScenesManager::tScenesIterator iter = ScenesManager::getSingletonPtr()->getScenesIterator();
     while (iter.hasMoreElements())
@@ -77,169 +77,169 @@ void TaskManager::execute()
         }
     }
 
-	// Reset the main timer
-	m_timer.reset();
-	m_ulMicroseconds		= 0;
-	m_ulMilliseconds		= 0;
-	m_ulElapsedMicroseconds = 0;
-	m_ulElapsedMilliseconds = 0;
-	m_fElapsedSeconds		= 0.0f;
+    // Reset the main timer
+    m_timer.reset();
+    m_ulMicroseconds        = 0;
+    m_ulMilliseconds        = 0;
+    m_ulElapsedMicroseconds = 0;
+    m_ulElapsedMilliseconds = 0;
+    m_fElapsedSeconds       = 0.0f;
 
-	// Process each task one after another
-	while (!m_tasks.empty())
-	{
-		WindowEventUtilities::messagePump();
+    // Process each task one after another
+    while (!m_tasks.empty())
+    {
+        WindowEventUtilities::messagePump();
 
-		// Process the tasks
-		step();
-	}
+        // Process the tasks
+        step();
+    }
 
-	ATHENA_LOG_EVENT("End of the execution");
+    ATHENA_LOG_EVENT("End of the execution");
 }
 
 //---------------------------------------------------------------------
 
 void TaskManager::step(unsigned long elapsedMicroSeconds)
 {
-	// Declarations
-	tTasksIterator	iter, iter2, iterEnd;
-	Task*			pTask;
+    // Declarations
+    tTasksIterator  iter, iter2, iterEnd;
+    Task*           pTask;
 
-	// Process each task
-	for (iter = m_tasks.begin(), iterEnd = m_tasks.end(); iter != iterEnd; )
-	{
-		pTask = iter->second;
-		iter2 = iter;
-		++iter;
-		
-		// Test if te task must be killed
-		if (pTask->mustBeKilled())
-		{
-			pTask->stop();
-			delete pTask;
-			m_tasks.erase(iter2);
-			
-			continue;
-		}
+    // Process each task
+    for (iter = m_tasks.begin(), iterEnd = m_tasks.end(); iter != iterEnd; )
+    {
+        pTask = iter->second;
+        iter2 = iter;
+        ++iter;
 
-		// Tell the task to do its job (if it isn't suspended)
-		if (!pTask->isSuspended())
-			pTask->update();
-	}
+        // Test if te task must be killed
+        if (pTask->mustBeKilled())
+        {
+            pTask->stop();
+            delete pTask;
+            m_tasks.erase(iter2);
+
+            continue;
+        }
+
+        // Tell the task to do its job (if it isn't suspended)
+        if (!pTask->isSuspended())
+            pTask->update();
+    }
 
 
     // Update the timings
-	unsigned long ulLastMicroseconds = m_ulMicroseconds;
-	unsigned long ulLastMilliseconds = m_ulMilliseconds;
+    unsigned long ulLastMicroseconds = m_ulMicroseconds;
+    unsigned long ulLastMilliseconds = m_ulMilliseconds;
 
     if (elapsedMicroSeconds == 0)
-    	m_ulMicroseconds = m_timer.getMicroseconds();
+        m_ulMicroseconds = m_timer.getMicroseconds();
     else
-    	m_ulMicroseconds += elapsedMicroSeconds;
+        m_ulMicroseconds += elapsedMicroSeconds;
 
-	m_ulMilliseconds = (unsigned long) (m_ulMicroseconds * 0.001f);
+    m_ulMilliseconds = (unsigned long) (m_ulMicroseconds * 0.001f);
 
-	m_ulElapsedMicroseconds = m_ulMicroseconds - ulLastMicroseconds;
-	m_ulElapsedMilliseconds = m_ulMilliseconds - ulLastMilliseconds;
-	m_fElapsedSeconds		= (float) m_ulElapsedMilliseconds * 0.001f;
+    m_ulElapsedMicroseconds = m_ulMicroseconds - ulLastMicroseconds;
+    m_ulElapsedMilliseconds = m_ulMilliseconds - ulLastMilliseconds;
+    m_fElapsedSeconds       = (float) m_ulElapsedMilliseconds * 0.001f;
 }
 
 //---------------------------------------------------------------------
 
 bool TaskManager::addTask(tPriority priority, Task* pTask)
 {
-	assert(pTask);
+    assert(pTask);
 
-	ATHENA_LOG_EVENT("Adding a task, with the priority " + StringConverter::toString(priority));
+    ATHENA_LOG_EVENT("Adding a task, with the priority " + StringConverter::toString(priority));
 
-	// Check that there isn't any other task with the same priority
-	if (m_tasks.find(priority) != m_tasks.end())
-	{
-		ATHENA_LOG_ERROR("A task with the same priority already exists");
-		delete pTask;
-		return false;
-	}
+    // Check that there isn't any other task with the same priority
+    if (m_tasks.find(priority) != m_tasks.end())
+    {
+        ATHENA_LOG_ERROR("A task with the same priority already exists");
+        delete pTask;
+        return false;
+    }
 
-	// Start the task
-	if (!pTask->start())
-	{
-		ATHENA_LOG_ERROR("Failed to start the task");
-		delete pTask;
-		return false;
-	}
+    // Start the task
+    if (!pTask->start())
+    {
+        ATHENA_LOG_ERROR("Failed to start the task");
+        delete pTask;
+        return false;
+    }
 
-	// Put the task in the tasks pool
-	m_tasks[priority] = pTask;
-	
-	return true;
+    // Put the task in the tasks pool
+    m_tasks[priority] = pTask;
+
+    return true;
 }
 
 //---------------------------------------------------------------------
 
 void TaskManager::suspendTask(tPriority priority)
 {
-	// Declarations
-	tTasksIterator iter;
+    // Declarations
+    tTasksIterator iter;
 
-	// Retrieve the task
+    // Retrieve the task
     iter = m_tasks.find(priority);
-	if (iter == m_tasks.end())
-		return;
+    if (iter == m_tasks.end())
+        return;
 
-	// Check that the task isn't already suspended
-	if (iter->second->isSuspended())
-		return;
+    // Check that the task isn't already suspended
+    if (iter->second->isSuspended())
+        return;
 
-	// Suspend the task
-	iter->second->onSuspend();
-	iter->second->suspend(true);
+    // Suspend the task
+    iter->second->onSuspend();
+    iter->second->suspend(true);
 }
 
 //---------------------------------------------------------------------
 
 void TaskManager::resumeTask(tPriority priority)
 {
-	// Declarations
-	tTasksIterator iter;
+    // Declarations
+    tTasksIterator iter;
 
-	// Retrieve the task
+    // Retrieve the task
     iter = m_tasks.find(priority);
-	if (iter == m_tasks.end())
-		return;
+    if (iter == m_tasks.end())
+        return;
 
-	// Check that the task is suspended
-	if (!iter->second->isSuspended())
-		return;
+    // Check that the task is suspended
+    if (!iter->second->isSuspended())
+        return;
 
-	// Resume the task
-	iter->second->suspend(false);
-	iter->second->onResume();
+    // Resume the task
+    iter->second->suspend(false);
+    iter->second->onResume();
 }
 
 //---------------------------------------------------------------------
 
 void TaskManager::removeTask(tPriority priority)
 {
-	// Declarations
-	tTasksIterator iter;
+    // Declarations
+    tTasksIterator iter;
 
-	// Retrieve the task
+    // Retrieve the task
     iter = m_tasks.find(priority);
-	if (iter == m_tasks.end())
-		return;
+    if (iter == m_tasks.end())
+        return;
 
-	// Mark the task as 'to be killed'
-	iter->second->flagAsKillable();
+    // Mark the task as 'to be killed'
+    iter->second->flagAsKillable();
 }
 
 //---------------------------------------------------------------------
 
 void TaskManager::killAllTasks()
 {
-	// Declarations
-	tTasksIterator iter, iterEnd;
+    // Declarations
+    tTasksIterator iter, iterEnd;
 
-	// // Mark all tasks as 'to be killed'
-	for (iter = m_tasks.begin(), iterEnd = m_tasks.end(); iter != iterEnd; ++iter)
-		iter->second->flagAsKillable();
+    // // Mark all tasks as 'to be killed'
+    for (iter = m_tasks.begin(), iterEnd = m_tasks.end(); iter != iterEnd; ++iter)
+        iter->second->flagAsKillable();
 }

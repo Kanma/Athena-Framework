@@ -1,7 +1,7 @@
-/** @file	TaskEnd.cpp
-	@author	Philip Abbet
+/** @file   TaskEnd.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::TaskEnd'
+    Implementation of the class 'Athena::Tasks::TaskEnd'
 */
 
 #include <Athena/Tasks/TaskEnd.h>
@@ -29,17 +29,17 @@ TaskEnd::~TaskEnd()
 
 bool TaskEnd::start()
 {
-	// Assertions
-	assert(Ogre::Root::getSingletonPtr());
+    // Assertions
+    assert(Ogre::Root::getSingletonPtr());
 
-	return true;
+    return true;
 }
 
 //---------------------------------------------------------------------
 
 void TaskEnd::update()
 {
-	Ogre::Root::getSingletonPtr()->_fireFrameEnded();
+    Ogre::Root::getSingletonPtr()->_fireFrameEnded();
 }
 
 //---------------------------------------------------------------------
