@@ -1,3 +1,22 @@
+# List the headers files
+set(HEADERS ${XMAKE_BINARY_DIR}/include/Athena/Config.h
+           ../include/Athena/Configuration.h
+           ../include/Athena/Engine.h
+           ../include/Athena/Prerequisites.h
+           ../include/Athena/GameStates/GameStateManager.h
+           ../include/Athena/GameStates/IGameState.h
+           ../include/Athena/Tasks/GameStateTask.h
+           ../include/Athena/Tasks/GameStateStackTask.h
+           ../include/Athena/Tasks/GraphicsTask.h
+           ../include/Athena/Tasks/InputsTask.h
+           ../include/Athena/Tasks/PhysicsTask.h
+           ../include/Athena/Tasks/Task.h
+           ../include/Athena/Tasks/TaskEnd.h
+           ../include/Athena/Tasks/TaskManager.h
+           ../include/Athena/Tasks/TaskStart.h
+)
+
+
 # List the source files
 set(SRCS Configuration.cpp
          Engine.cpp
@@ -29,11 +48,11 @@ if (NOT ATHENA_FRAMEWORK_STATIC)
     xmake_create_dynamic_library(ATHENA_FRAMEWORK Athena-Framework
                                  "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
                                  "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
-                                 ${SRCS})
+                                 ${HEADERS} ${SRCS})
 
     xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_FRAMEWORK_EXPORTS")
 else()
-    xmake_create_static_library(ATHENA_FRAMEWORK Athena-Framework ${SRCS})
+    xmake_create_static_library(ATHENA_FRAMEWORK Athena-Framework ${HEADERS} ${SRCS})
 endif()
 
 xmake_project_link(ATHENA_FRAMEWORK ATHENA_GRAPHICS ATHENA_PHYSICS ATHENA_INPUTS)
