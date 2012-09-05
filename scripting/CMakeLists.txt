@@ -5,6 +5,7 @@ xmake_import_search_paths(ATHENA_FRAMEWORK)
 
 # List the source files
 set(SRCS module.cpp
+         time.cpp
 )
 
 set(JS_SRCS ""

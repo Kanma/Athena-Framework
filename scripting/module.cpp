@@ -16,8 +16,7 @@ using namespace Athena;
 
 /*********************************** EXTERNAL FUNCTIONS *********************************/
 
-
-/*************************************** FUNCTIONS *************************************/
+extern bool bind_time_functions(v8::Handle<v8::Object> parent);
 
 
 /****************************** INITIALISATION OF THE MODULE ****************************/
@@ -33,6 +32,6 @@ extern "C" {
 
         parent->Set(v8::String::New("VERSION"), v8::String::New(Athena::VERSION));
 
-        return true;
+        return bind_time_functions(parent);
     }
 }
