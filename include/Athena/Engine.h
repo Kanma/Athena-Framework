@@ -91,6 +91,7 @@ public:
                                            int width, int height,
                                            bool fullscreen);
 
+#if ATHENA_PLATFORM != ATHENA_PLATFORM_APPLE
     //-----------------------------------------------------------------------------------
     /// @brief  Create a render window
     /// @param  strName                 Name of the window
@@ -105,6 +106,7 @@ public:
                                            const std::string& strTitle,
                                            int width, int height,
                                            bool fullscreen);
+#endif
 
     //-----------------------------------------------------------------------------------
     /// @brief  Retrieves the main window of the application
@@ -154,6 +156,16 @@ public:
         return m_pInputsUnit;
     }
 
+#if ATHENA_FRAMEWORK_SCRIPTING
+    //-----------------------------------------------------------------------------------
+    /// @brief  Retrieves the Scripting Manager
+    //-----------------------------------------------------------------------------------
+    inline Scripting::ScriptingManager* getScriptingManager()
+    {
+        return m_pScriptingManager;
+    }
+#endif
+
 
 private:
     //-----------------------------------------------------------------------------------
@@ -186,6 +198,11 @@ private:
     Entities::ScenesManager*        m_pScenesManager;       ///< The Scenes Manager
     Entities::ComponentsManager*    m_pComponentsManager;   ///< The Components Manager
     Inputs::InputsUnit*             m_pInputsUnit;          ///< The Inputs Unit
+
+#if ATHENA_FRAMEWORK_SCRIPTING
+    Scripting::ScriptingManager*    m_pScriptingManager;    ///< The Scripting Manager
+#endif
+
     Graphics::OgreLogListener*      m_pOgreLogListener;     ///< The Ogre Log Listener
     bool                            m_bOwnOgreLogManager;   ///< Indicates if the engine is responsible to delete
                                                             ///  the Log manager of Ogre

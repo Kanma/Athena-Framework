@@ -46,59 +46,16 @@ struct tLogConf
 //  std::string     strDefaultCursor;           ///< Default cursor
 // };
 
-//-----------------------------------------------------------------------------------
-/// @brief  Contains the configuration of the Inputs subsystem
-//-----------------------------------------------------------------------------------
-struct tInputsConf
-{
-    bool            bEnable;                    ///< Indicates if the Inputs subsystem is enabled
-//  std::string     strVirtualControllersFile;  ///< Name of the file containing the virtual controllers
-};
-
-//-----------------------------------------------------------------------------------
-/// @brief  Contains the configuration of the default window
-//-----------------------------------------------------------------------------------
-struct tDefaultWindowConf
-{
-    bool            bEnable;                    ///< Indicates if a default window must be created
-    std::string     strTitle;                   ///< Title of the window
-};
-
-//-----------------------------------------------------------------------------------
-/// @brief  Contains the configuration of the Audio subsystem
-//-----------------------------------------------------------------------------------
-// struct tAudioConf
-// {
-//  bool            bEnable;                    ///< Indicates if the Audio subsystem is enabled
-// };
 
 //-----------------------------------------------------------------------------------
 /// @brief  Contains the configuration of the Physics subsystem
 //-----------------------------------------------------------------------------------
 struct tPhysicsConf
 {
-    bool            bEnable;                    ///< Indicates if the Physics subsystem is enabled
     unsigned int    nbMaxSubSteps;              ///< Maximum number of substeps during a simulation
     float           fixedTimeStep;              ///< Fixed timesteps used for the simulations
 };
 
-//-----------------------------------------------------------------------------------
-/// @brief  Contains the configuration of the Scripting subsystem
-//-----------------------------------------------------------------------------------
-// struct tScriptingConf
-// {
-//  bool            bEnable;                    ///< Indicates if the Scripting subsystem is enabled
-//  std::string     strStartupScript;           ///< Name of the script to execute at startup
-//  bool            bEmbedded;                  ///< Indicates if the Scripting subsystem is embedded
-// };
-
-//-----------------------------------------------------------------------------------
-/// @brief  Contains the configuration of the Network subsystem
-//-----------------------------------------------------------------------------------
-// struct tNetworkConf
-// {
-//  bool            bEnable;                    ///< Indicates if the Network subsystem is enabled
-// };
 
 
 //---------------------------------------------------------------------------------------
@@ -133,12 +90,7 @@ public:
     tAthenaConf         athena;         ///< Athena configuration
     tLogConf            log;            ///< Log configuration
     // tGUIConf         gui;            ///< GUI configuration
-    tInputsConf         inputs;         ///< Inputs configuration
-    tDefaultWindowConf  defaultWindow;  ///< Default window configuration
-    // tAudioConf          audio;          ///< Audio configuration
     tPhysicsConf        physics;        ///< Physics configuration
-    // tScriptingConf      scripting;      ///< Scripting configuration
-    // tNetworkConf        network;        ///< Network configuration
 };
 
 }

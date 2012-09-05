@@ -12,6 +12,10 @@
 #include <Athena-Inputs/Prerequisites.h>
 #include <Athena/Config.h>
 
+#if ATHENA_FRAMEWORK_SCRIPTING
+    #include <Athena-Scripting/Prerequisites.h>
+#endif
+
 
 /// Used to export symbols from the library
 #if (ATHENA_PLATFORM == ATHENA_PLATFORM_WIN32) && !ATHENA_FRAMEWORK_STATIC

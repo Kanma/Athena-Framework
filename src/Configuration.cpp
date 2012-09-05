@@ -35,31 +35,9 @@ Configuration::Configuration()
     // gui.strLocalDir                     = "";
     // gui.strDefaultCursor                = "";
 
-    // Inputs configuration defaults
-    inputs.bEnable                      = true;
-    // inputs.strVirtualControllersFile = "";
-
-    // Default window configuration defaults
-    defaultWindow.bEnable               = true;
-    defaultWindow.strTitle              = "";
-
-    // Audio configuration defaults
-    // audio.bEnable                        = true;
-
     // Physics configuration defaults
-    physics.bEnable                     = true;
     physics.nbMaxSubSteps               = 1;
     physics.fixedTimeStep               = Math::Real(1.0 / 60.0);
-
-    // physics.bCollisionManagerEnable      = true;
-
-    // Scripting configuration defaults
-    // scripting.bEnable                    = true;
-    // scripting.bEmbedded                  = true;
-    // scripting.strStartupScript           = "";
-
-    // Network configuration defaults
-    // network.bEnable                      = true;
 }
 
 //---------------------------------------------------------------------
@@ -135,56 +113,11 @@ void Configuration::load(const std::string& strConfigFile)
     // }
 
 
-    // Inputs section
-    if (cfgFile.selectSection("Inputs"))
-    {
-        // Optional parameters
-        cfgFile.getParameterValue("Enable",             inputs.bEnable);
-        // cfgFile.getParameterValue("VirtualControllers",  inputs.strVirtualControllersFile);
-    }
-
-
-    // DefaultWindow section
-    if (cfgFile.selectSection("DefaultWindow"))
-    {
-        // Optional parameters
-        cfgFile.getParameterValue("Enable", defaultWindow.bEnable);
-        cfgFile.getParameterValue("Title",  defaultWindow.strTitle);
-    }
-
-
-    // Audio section
-    // if (cfgFile.selectSection("Audio"))
-    // {
-    //  // Optional parameters
-    //  cfgFile.getParameterValue("Enable", audio.bEnable);
-    // }
-
-
     // Physics section
     if (cfgFile.selectSection("Physics"))
     {
         // Optional parameters
-        cfgFile.getParameterValue("Enable",         physics.bEnable);
         cfgFile.getParameterValue("NbMaxSubSteps",  physics.nbMaxSubSteps);
         cfgFile.getParameterValue("FixedTimeStep",  physics.fixedTimeStep);
     }
-
-
-    // Scripting section
-    // if (cfgFile.selectSection("Scripting"))
-    // {
-    //  // Optional parameters
-    //  cfgFile.getParameterValue("Enable",         scripting.bEnable);
-    //  cfgFile.getParameterValue("StartupScript",  scripting.strStartupScript);
-    //  cfgFile.getParameterValue("Embedded",       scripting.bEmbedded);
-    // }
-
-
-    // Network section
-    // if (cfgFile.selectSection("Network"))
-    // {
-    //  // Optional parameters
-    //  cfgFile.getParameterValue("Enable", network.bEnable);
-    // }
 }

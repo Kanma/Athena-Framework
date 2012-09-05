@@ -17,7 +17,11 @@
 #include <Athena-Graphics/OgreLogListener.h>
 
 // #include <Athena-Audio/AudioManager.h>
-// #include <Athena-Scripting/ScriptingManager.h>
+
+#if ATHENA_FRAMEWORK_SCRIPTING
+    #include <Athena-Scripting/ScriptingManager.h>
+#endif
+
 // #include <Athena-GUI/GUIManager.h>
 // #include <Athena-GUI/GUIListener.h>
 
@@ -45,13 +49,16 @@ using namespace Athena::Tasks;
 using namespace Athena::GameStates;
 using namespace Athena::Inputs;
 using namespace Athena::Entities;
-// using namespace Athena::Physics;
+using namespace Athena::Physics;
 // using namespace Athena::Audio;
-// using namespace Athena::Scripting;
 using namespace Athena::Graphics;
 // using namespace Athena::GUI;
 using namespace Athena::Utils;
 using namespace std;
+
+#if ATHENA_FRAMEWORK_SCRIPTING
+    using namespace Athena::Scripting;
+#endif
 
 
 using Ogre::ConfigFile;
@@ -75,7 +82,7 @@ template<> Engine* Singleton<Engine>::ms_Singleton = 0;
 
 /************************************** FUNCTIONS **************************************/
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+#if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
 
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -109,7 +116,8 @@ std::string macBundlePath()
 
 Engine::Engine()
 : m_pTaskManager(0), m_pGameStateManager(0), m_pScenesManager(0), m_pComponentsManager(0),
-  m_pInputsUnit(0), m_pOgreLogListener(0), m_bOwnOgreLogManager(true), m_pMainWindow(0)
+  m_pInputsUnit(0), m_pScriptingManager(0), m_pOgreLogListener(0), m_bOwnOgreLogManager(true),
+  m_pMainWindow(0)
 {
 }
 
@@ -225,6 +233,17 @@ void Engine::setup()
         // Create the Components Manager
         m_pComponentsManager = new ComponentsManager();
 
+#if ATHENA_FRAMEWORK_SCRIPTING
+        // Create the Scripting Manager
+        m_pScriptingManager = new ScriptingManager();
+#endif
+
+        // Create the Audio Manager (not implemented yet)
+        // m_pAudioManager = new AudioManager();
+
+        // Create the Network Manager (not implemented yet)
+        // m_pNetworkManager = new NetworkManager();
+
         // Initializes the Graphics module & Ogre
         assert(!m_configuration.athena.strPluginsFile.empty());
         assert(!m_configuration.athena.strOgreConfigFile.empty());
@@ -248,64 +267,21 @@ void Engine::setup()
         if (!m_configuration.athena.strResourcesFile.empty())
             setupResources(m_configuration.athena.strResourcesFile);
 
-        // Initialise and create a default rendering window (if necessary)
-        if (m_configuration.defaultWindow.bEnable)
-        {
-            if (m_configuration.defaultWindow.strTitle.empty())
-                m_pMainWindow = pOgreRoot->initialise(true);
-            else
-                m_pMainWindow = pOgreRoot->initialise(true, m_configuration.defaultWindow.strTitle);
-
-            // Initialise the resources, parse scripts, etc
-            ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-        }
-        else
-        {
-            pOgreRoot->initialise(false);
-        }
+        // Initialise Ogre
+        pOgreRoot->initialise(false);
 
         // Initialize the Physics module
-        if (m_configuration.physics.bEnable)
-            Physics::initialize();
+        Physics::initialize();
 
         // Create the standard tasks
         m_pTaskManager->addTask(TASK_START,             new TaskStart());
+        m_pTaskManager->addTask(TASK_PHYSICS,           new PhysicsTask());
         m_pTaskManager->addTask(TASK_GRAPHICS,          new GraphicsTask());
         m_pTaskManager->addTask(TASK_GAMESTATE,         new GameStateTask(m_pGameStateManager));
         m_pTaskManager->addTask(TASK_GAMESTATESTACK,    new GameStateStackTask(m_pGameStateManager));
+        // m_pTasksManager->addTask(TASK_AUDIO,           new AudioTask());
+        // m_pTasksManager->addTask(TASK_NETWORK,         new NetworkTask());
         m_pTaskManager->addTask(TASK_END,               new TaskEnd());
-
-        if (m_configuration.physics.bEnable)
-            m_pTaskManager->addTask(TASK_PHYSICS, new PhysicsTask());
-
-        // Create the inputs unit
-        if (m_pMainWindow && m_configuration.inputs.bEnable)
-            createInputsUnit();
-
-        // Create the GUI manager
-        // if (pMainWindow && m_configuration.gui.bEnable && m_configuration.inputs.bEnable)
-        //  new CGUIManager();
-
-        // Create the audio manager
-        // if (m_configuration.audio.bEnable)
-        //  new CAudioManager();
-
-        // Create the network manager
-        // if (m_configuration.network.bEnable)
-        // {
-        //  new CNetworkManager();
-        //  pTasksManager->addTask(TASK_NETWORK, new CNetworkTask());
-        // }
-
-        // Create the scripting manager
-        // if (m_configuration.scripting.bEnable)
-        // {
-        //  new CScriptingManager();
-        //
-        //  // Execute the startup script if any
-        //  if (!m_configuration.scripting.strStartupScript.empty())
-        //      pScriptingManager->executeFile(m_configuration.scripting.strStartupScript);
-        // }
     }
     catch (Ogre::Exception& ex)
     {
@@ -334,17 +310,19 @@ void Engine::destroy()
 {
     ATHENA_LOG_EVENT("Destruction of the engine");
 
-    // delete pNetworkManager;
-    // pNetworkManager = 0;
+    // delete m_pNetworkManager;
+    // m_pNetworkManager = 0;
 
-    // delete pAudioManager;
-    // pAudioManager = 0;
+    // delete m_pAudioManager;
+    // m_pAudioManager = 0;
 
-    // delete pGUIManager;
-    // pGUIManager = 0;
+    // delete m_pGUIManager;
+    // m_pGUIManager = 0;
 
-    // delete pScriptingManager;
-    // pScriptingManager = 0;
+#if ATHENA_FRAMEWORK_SCRIPTING
+    delete m_pScriptingManager;
+    m_pScriptingManager = 0;
+#endif
 
     delete m_pInputsUnit;
     m_pInputsUnit = 0;
@@ -354,9 +332,6 @@ void Engine::destroy()
 
     delete m_pGameStateManager;
     m_pGameStateManager = 0;
-
-    // delete pBehaviorsManager;
-    // pBehaviorsManager = 0;
 
     delete m_pScenesManager;
     m_pScenesManager = 0;
@@ -403,7 +378,7 @@ void Engine::setupResources(const std::string& strFileName)
         {
             strTypeName = i->first;
             strArchName = i->second;
-#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+#if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
             // OS X does not set the working directory relative to the app,
             // In order to make things portable on OS X we need to provide
             // the loading with it's own bundle path location
@@ -427,7 +402,7 @@ RenderWindow* Engine::createRenderWindow(size_t existingwindowhandle, const std:
 
     miscParams["externalWindowHandle"] = StringConverter::toString(existingwindowhandle);
 
-    #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+    #if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
         miscParams["macAPI"] = "cocoa";
     #endif
 
@@ -440,17 +415,17 @@ RenderWindow* Engine::createRenderWindow(size_t existingwindowhandle, const std:
         // Initialise the resources, parse scripts, etc
         ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-        if (m_configuration.inputs.bEnable)
-            createInputsUnit();
+        createInputsUnit();
 
-        // if (m_configuration.gui.bEnable && m_configuration.inputs.bEnable)
-        //  new CGUIManager();
+        //  new GUIManager();
     }
 
     return theWindow;
 }
 
 //---------------------------------------------------------------------
+
+#if ATHENA_PLATFORM != ATHENA_PLATFORM_APPLE
 
 RenderWindow* Engine::createRenderWindow(const std::string& strName,
                                          const std::string& strTitle,
@@ -471,15 +446,15 @@ RenderWindow* Engine::createRenderWindow(const std::string& strName,
         // Initialise the resources, parse scripts, etc
         ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-        if (m_configuration.inputs.bEnable)
-            createInputsUnit();
+        createInputsUnit();
 
-        // if (m_configuration.gui.bEnable && m_configuration.inputs.bEnable)
-        //  new CGUIManager();
+        //  new GUIManager();
     }
 
     return theWindow;
 }
+
+#endif
 
 //---------------------------------------------------------------------
 

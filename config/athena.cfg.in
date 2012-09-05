@@ -9,14 +9,6 @@ Kind = XML
 Ogre = ogre.log
 RedirectOgreLog = false
 
-[Inputs]
-Enable = true
-
 [Physics]
-Enable = true
 NbMaxSubSteps = 1
 FixedTimeStep = 0.016667
-
-[DefaultWindow]
-Enable = true
-Title = Athena - Demo
