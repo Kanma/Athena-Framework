@@ -10,35 +10,7 @@ if (NOT DEFINED ATHENA_FRAMEWORK_STATIC)
 endif()
 
 if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
-    set(ATHENA_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
-endif()
-
-
-##########################################################################################
-# Setup the dependencies
-
-if (NOT DEFINED ATHENA_MATH_STATIC)
-    set(ATHENA_MATH_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_CORE_STATIC)
-    set(ATHENA_CORE_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_ENTITIES_STATIC)
-    set(ATHENA_ENTITIES_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_GRAPHICS_STATIC)
-    set(ATHENA_GRAPHICS_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_PHYSICS_STATIC)
-    set(ATHENA_PHYSICS_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_INPUTS_STATIC)
-    set(ATHENA_INPUTS_STATIC ON)
+    set(ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
 endif()
 
 
