@@ -5,10 +5,6 @@ project(ATHENA_FRAMEWORK)
 ##########################################################################################
 # Settings
 
-if (NOT DEFINED ATHENA_FRAMEWORK_STATIC)
-    set(ATHENA_FRAMEWORK_STATIC OFF CACHE BOOL "Build Athena-Framework as a static library")
-endif()
-
 if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
     set(ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
 endif()

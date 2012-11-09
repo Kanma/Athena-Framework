@@ -54,23 +54,15 @@ endif()
 
 
 # Declaration of the library
-if (NOT ATHENA_FRAMEWORK_STATIC)
-    xmake_create_dynamic_library(ATHENA_FRAMEWORK Athena-Framework
-                                 "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
-                                 "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
-                                 ${HEADERS} ${SRCS})
+xmake_create_dynamic_library(ATHENA_FRAMEWORK Athena-Framework
+                             "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
+                             "${ATHENA_FRAMEWORK_VERSION_MAJOR}.${ATHENA_FRAMEWORK_VERSION_MINOR}.${ATHENA_FRAMEWORK_VERSION_PATCH}"
+                             ${HEADERS} ${SRCS})
 
-    xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_FRAMEWORK_EXPORTS")
+xmake_add_to_list_property(ATHENA_FRAMEWORK COMPILE_DEFINITIONS "ATHENA_FRAMEWORK_EXPORTS")
 
-    if (APPLE)
-        xmake_add_to_property(ATHENA_FRAMEWORK LINK_FLAGS "-framework CoreFoundation -framework Carbon")
-    endif()
-else()
-    xmake_create_static_library(ATHENA_FRAMEWORK Athena-Framework ${HEADERS} ${SRCS})
-
-    if (APPLE)
-        xmake_export_link_flags(ATHENA_FRAMEWORK "-framework CoreFoundation -framework Carbon")
-    endif()
+if (APPLE)
+    xmake_add_to_property(ATHENA_FRAMEWORK LINK_FLAGS "-framework CoreFoundation -framework Carbon")
 endif()
 
 xmake_project_link(ATHENA_FRAMEWORK ATHENA_GRAPHICS ATHENA_PHYSICS ATHENA_INPUTS OGRE)
