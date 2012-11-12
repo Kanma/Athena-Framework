@@ -116,7 +116,11 @@ std::string macBundlePath()
 
 Engine::Engine()
 : m_pTaskManager(0), m_pGameStateManager(0), m_pScenesManager(0), m_pComponentsManager(0),
-  m_pInputsUnit(0), m_pScriptingManager(0), m_pOgreLogListener(0), m_bOwnOgreLogManager(true),
+  m_pInputsUnit(0),
+#if ATHENA_FRAMEWORK_SCRIPTING
+  m_pScriptingManager(0),
+#endif
+  m_pOgreLogListener(0), m_bOwnOgreLogManager(true),
   m_pMainWindow(0)
 {
 }
