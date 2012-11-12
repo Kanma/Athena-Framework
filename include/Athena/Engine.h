@@ -91,7 +91,6 @@ public:
                                            int width, int height,
                                            bool fullscreen);
 
-#if ATHENA_PLATFORM != ATHENA_PLATFORM_APPLE
     //-----------------------------------------------------------------------------------
     /// @brief  Create a render window
     /// @param  strName                 Name of the window
@@ -106,7 +105,6 @@ public:
                                            const std::string& strTitle,
                                            int width, int height,
                                            bool fullscreen);
-#endif
 
     //-----------------------------------------------------------------------------------
     /// @brief  Retrieves the main window of the application

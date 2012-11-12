@@ -425,8 +425,6 @@ RenderWindow* Engine::createRenderWindow(size_t existingwindowhandle, const std:
 
 //---------------------------------------------------------------------
 
-#if ATHENA_PLATFORM != ATHENA_PLATFORM_APPLE
-
 RenderWindow* Engine::createRenderWindow(const std::string& strName,
                                          const std::string& strTitle,
                                          int width, int height, bool fullscreen)
@@ -436,6 +434,10 @@ RenderWindow* Engine::createRenderWindow(const std::string& strName,
     RenderWindow*     theWindow;
 
     miscParams["title"] = strTitle;
+
+    #if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
+        miscParams["macAPI"] = "cocoa";
+    #endif
 
     theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
 
@@ -453,8 +455,6 @@ RenderWindow* Engine::createRenderWindow(const std::string& strName,
 
     return theWindow;
 }
-
-#endif
 
 //---------------------------------------------------------------------
 

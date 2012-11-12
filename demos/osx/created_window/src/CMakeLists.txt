@@ -4,13 +4,8 @@ set(SRCS main.mm
          MainGameState.mm
 )
 
-# List the Interface Builder Files
-set(XIBS Application
-)
-
 # Setup the search paths
 set(INCLUDE_PATHS "${ATHENA_DEMO_OSX_EXTERNAL_WINDOW_SOURCE_DIR}/include"
-                  "${OGRE_SOURCE_DIR}/RenderSystems"
                   "${XMAKE_BINARY_DIR}/include")
 
 include_directories(${INCLUDE_PATHS})
@@ -19,53 +14,34 @@ xmake_import_search_paths(ATHENA_FRAMEWORK)
 xmake_import_search_paths(OGRE)
 
 # Create and link the executable
-xmake_create_executable(ATHENA_DEMO_OSX_EXTERNAL_WINDOW Athena-Demo-External-Window ${SRCS})
+xmake_create_executable(ATHENA_DEMO_OSX_CREATED_WINDOW Athena-Demo-Created-Window ${SRCS})
 
-xmake_project_link(ATHENA_DEMO_OSX_EXTERNAL_WINDOW ATHENA_FRAMEWORK)
-xmake_project_link(ATHENA_DEMO_OSX_EXTERNAL_WINDOW OGRE)
-xmake_project_link(ATHENA_DEMO_OSX_EXTERNAL_WINDOW RENDERSYSTEM_GL)
+xmake_project_link(ATHENA_DEMO_OSX_CREATED_WINDOW ATHENA_FRAMEWORK)
+xmake_project_link(ATHENA_DEMO_OSX_CREATED_WINDOW OGRE)
 
-xmake_add_to_property(ATHENA_DEMO_OSX_EXTERNAL_WINDOW LINK_FLAGS "-framework CoreFoundation -framework Cocoa")
+xmake_add_to_property(ATHENA_DEMO_OSX_CREATED_WINDOW LINK_FLAGS "-framework CoreFoundation -framework Cocoa")
 
 # Create .app bundle
-set_property(TARGET Athena-Demo-External-Window PROPERTY MACOSX_BUNDLE TRUE)
+set_property(TARGET Athena-Demo-Created-Window PROPERTY MACOSX_BUNDLE TRUE)
 
-set_target_properties(Athena-Demo-External-Window PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${ATHENA_DEMO_OSX_EXTERNAL_WINDOW_SOURCE_DIR}/resources/Info.plist")
+set_target_properties(Athena-Demo-Created-Window PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${ATHENA_DEMO_OSX_CREATED_WINDOW_SOURCE_DIR}/resources/Info.plist")
 
-set(CONTENTS_PATH "${XMAKE_BINARY_DIR}/bin/Athena-Demo-External-Window.app/Contents")
-
-# Make sure we can find the 'ibtool' program. If we can NOT find it we
-# skip generation of this project
-find_program(IBTOOL ibtool HINTS "/usr/bin" "${OSX_DEVELOPER_ROOT}/usr/bin")
-if (${IBTOOL} STREQUAL "IBTOOL-NOTFOUND")
-    message(SEND_ERROR "ibtool can not be found and is needed to compile the .xib files. It should have been installed with 
-                        the Apple developer tools. The default system paths were searched in addition to ${OSX_DEVELOPER_ROOT}/usr/bin")
-endif()
+set(CONTENTS_PATH "${XMAKE_BINARY_DIR}/bin/Athena-Demo-Created-Window.app/Contents")
 
 # Make sure the 'Resources' Directory is correctly created before we build
-add_custom_command(TARGET Athena-Demo-External-Window PRE_BUILD
+add_custom_command(TARGET Athena-Demo-Created-Window PRE_BUILD
                    COMMAND mkdir ARGS -p "${CONTENTS_PATH}/MacOS"
                    COMMAND mkdir ARGS -p "${CONTENTS_PATH}/Resources")
 
-# Compile the .xib files using the 'ibtool' program with the destination being the app package
-foreach(xib ${XIBS})
-    add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
-                       COMMAND ${IBTOOL} --errors --warnings --notices --output-format human-readable-text 
-                               --compile "${CONTENTS_PATH}/Resources/${xib}.nib"
-                               "${ATHENA_DEMO_OSX_EXTERNAL_WINDOW_SOURCE_DIR}/resources/${xib}.xib"
-                       COMMENT "Compiling resources/${xib}.xib")
-
-endforeach()
-
 # Symlink the Frameworks
-add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
+add_custom_command(TARGET Athena-Demo-Created-Window POST_BUILD
     COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Frameworks
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/Ogre.framework ${CONTENTS_PATH}/Frameworks/
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/Cg.framework ${CONTENTS_PATH}/Frameworks/
 )
 
 # Symlink the configuration files
-add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
+add_custom_command(TARGET Athena-Demo-Created-Window POST_BUILD
     COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Resources
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/plugins.cfg ${CONTENTS_PATH}/Resources/
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/resources.cfg ${CONTENTS_PATH}/Resources/
@@ -73,7 +49,7 @@ add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
 )
 
 # Symlink the plugins
-add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
+add_custom_command(TARGET Athena-Demo-Created-Window POST_BUILD
     COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Plugins
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/RenderSystem_GL.dylib ${CONTENTS_PATH}/Plugins/
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/Plugin_BSPSceneManager.dylib ${CONTENTS_PATH}/Plugins/
@@ -84,7 +60,7 @@ add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
 )
 
 # Symlink the dynamic libraries
-add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
+add_custom_command(TARGET Athena-Demo-Created-Window POST_BUILD
     COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Libraries
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/libAthena-Math.${ATHENA_MATH_VERSION}.dylib ${CONTENTS_PATH}/Libraries/
     COMMAND ln ARGS -s -f ${XMAKE_BINARY_DIR}/bin/libAthena-Core.${ATHENA_CORE_VERSION}.dylib ${CONTENTS_PATH}/Libraries/
@@ -99,4 +75,4 @@ add_custom_command(TARGET Athena-Demo-External-Window POST_BUILD
 )
 
 # Set the RPATH
-xmake_add_to_property(ATHENA_DEMO_OSX_EXTERNAL_WINDOW LINK_FLAGS "-Wl,-rpath,@loader_path/../Frameworks,-rpath,@loader_path/../Libraries")
+xmake_add_to_property(ATHENA_DEMO_OSX_CREATED_WINDOW LINK_FLAGS "-Wl,-rpath,@loader_path/../Frameworks,-rpath,@loader_path/../Libraries")
