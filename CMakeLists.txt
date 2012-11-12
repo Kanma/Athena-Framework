@@ -9,6 +9,10 @@ if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
     set(ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
 endif()
 
+if (NOT DEFINED ATHENA_BUILD_DEMOS)
+    set(ATHENA_BUILD_DEMOS OFF CACHE BOOL "Build the demos of the Athena Game Framework")
+endif()
+
 
 ##########################################################################################
 # Library version
@@ -84,4 +88,8 @@ add_subdirectory(unittests)
 
 if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
     add_subdirectory(scripting)
+endif()
+
+if (DEFINED ATHENA_BUILD_DEMOS)
+    add_subdirectory(demos)
 endif()

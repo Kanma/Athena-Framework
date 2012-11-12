@@ -1,0 +1,6 @@
+[General]
+Zip=@CONFIG_ATHENA_MEDIA_PATH@/Packs/AthenaMedia.zip
+FileSystem=@CONFIG_ATHENA_MEDIA_PATH@
+FileSystem=@CONFIG_DEMOS_MEDIA_PATH@/materials
+FileSystem=@CONFIG_DEMOS_MEDIA_PATH@/meshes
+FileSystem=@CONFIG_DEMOS_MEDIA_PATH@/textures
