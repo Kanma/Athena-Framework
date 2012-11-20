@@ -40,6 +40,7 @@
 
 #include <Ogre/OgreRoot.h>
 #include <Ogre/OgreConfigFile.h>
+#include <Ogre/OgreRenderWindow.h>
 
 
 using namespace Athena;
@@ -469,7 +470,10 @@ void Engine::createInputsUnit()
 
     m_pInputsUnit = new InputsUnit();
 
-    if (m_pInputsUnit->init(m_pMainWindow))
+    size_t hWnd = 0;
+    m_pMainWindow->getCustomAttribute("WINDOW", &hWnd);
+
+    if (m_pInputsUnit->init((void*) hWnd))
     {
         // // Load the virtual controllers if necessary
         // if (!m_configuration.inputs.strVirtualControllersFile.empty() &&
