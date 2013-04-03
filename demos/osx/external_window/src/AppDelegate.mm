@@ -1,4 +1,4 @@
-#import <AppDelegate.h>
+#import <external_window/include/AppDelegate.h>
 #import <MainGameState.h>
 #import <Athena/GameStates/GameStateManager.h>
 #import <Athena/Tasks/TaskManager.h>
