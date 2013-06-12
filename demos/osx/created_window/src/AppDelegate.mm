@@ -12,7 +12,7 @@ using namespace Athena::GameStates;
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification
 {
     // Initialize Athena
-    engine.setup("athena.cfg");
+    engine.setup(std::string("demos.cfg"));
 
     // Create the render window
     engine.createRenderWindow("MainWindow", "Example", 800, 600, false);

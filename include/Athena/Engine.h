@@ -8,7 +8,6 @@
 #define _ATHENA_ENGINE_H_
 
 #include <Athena/Prerequisites.h>
-#include <Athena/Configuration.h>
 
 
 namespace Athena {
@@ -68,13 +67,7 @@ public:
     /// @brief  Setup the engine, and initialise the subsystems
     /// @param  configuration   The configuration
     //-----------------------------------------------------------------------------------
-    void setup(const Configuration& configuration);
-
-    //-----------------------------------------------------------------------------------
-    /// @brief  Returns the configuration of the engine
-    /// @return The configuration
-    //-----------------------------------------------------------------------------------
-    const Configuration* getConfiguration() const;
+    void setup(const rapidjson::Value& configuration);
 
     //-----------------------------------------------------------------------------------
     /// @brief  Use an existing window as a render window
@@ -167,17 +160,6 @@ public:
 
 private:
     //-----------------------------------------------------------------------------------
-    /// @brief  Setup the engine, and initialise the subsystems
-    //-----------------------------------------------------------------------------------
-    void setup();
-
-    //-----------------------------------------------------------------------------------
-    /// @brief  Setup the resources used by the game
-    /// @param  strFileName     Name of the file containing the paths to the resources
-    //-----------------------------------------------------------------------------------
-    void setupResources(const std::string& strFileName);
-
-    //-----------------------------------------------------------------------------------
     /// @brief  Destroy the subsystems
     //-----------------------------------------------------------------------------------
     void destroy();
@@ -190,7 +172,7 @@ private:
 
     //_____ Attributes __________
 private:
-    Configuration                   m_configuration;        ///< The configuration of the engine
+    Data::LocationManager*          m_pLocationManager;     ///< The Location Manager
     Tasks::TaskManager*             m_pTaskManager;         ///< The Task Manager
     GameStates::GameStateManager*   m_pGameStateManager;    ///< The Game State Manager
     Entities::ScenesManager*        m_pScenesManager;       ///< The Scenes Manager

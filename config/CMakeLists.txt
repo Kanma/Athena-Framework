@@ -1,26 +1,38 @@
 if (ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
+
+    # Plugins folder
     set(CONFIG_PLUGIN_FOLDER "./")
 
-    if (APPLE)
-        file(RELATIVE_PATH CONFIG_ATHENA_MEDIA_PATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/appname" "${ATHENA_FRAMEWORK_SOURCE_DIR}/README")
-    else()
-        file(RELATIVE_PATH CONFIG_ATHENA_MEDIA_PATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" "${ATHENA_FRAMEWORK_SOURCE_DIR}/README")
+
+    # Resource folders
+    set(CONFIG_DEMOS_MEDIA_PATH "${ATHENA_FRAMEWORK_SOURCE_DIR}/demos/media")
+    set(CONFIG_ATHENA_MEDIA_PATH "${ATHENA_FRAMEWORK_SOURCE_DIR}/media")
+
+
+    # Render systems
+    set(CONFIG_RENDERSYSTEM_D3D9 "")
+    set(CONFIG_RENDERSYSTEM_D3D11 "")
+    set(CONFIG_RENDERSYSTEM_GL "")
+
+    if (OGRE_BUILD_RENDERSYSTEM_D3D9)
+        set(CONFIG_RENDERSYSTEM_D3D9 "\"RenderSystem_Direct3D9\",")
     endif()
 
-    string(REPLACE "README" "demos/media" CONFIG_DEMOS_MEDIA_PATH ${CONFIG_ATHENA_MEDIA_PATH})
-    string(REPLACE "README" "media" CONFIG_ATHENA_MEDIA_PATH ${CONFIG_ATHENA_MEDIA_PATH})
+    if (OGRE_BUILD_RENDERSYSTEM_D3D11)
+        set(CONFIG_RENDERSYSTEM_D3D11 "\"RenderSystem_Direct3D11\",")
+    endif()
 
+    if (OGRE_BUILD_RENDERSYSTEM_GL)
+        set(CONFIG_RENDERSYSTEM_GL "\"RenderSystem_GL\",")
+    endif()
+
+
+    # Generate the configuration files
     configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/config/athena.cfg.in
                    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/athena.cfg)
 
-    configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/config/plugins.cfg.in
-                   ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/plugins.cfg)
-
     if (ATHENA_BUILD_DEMOS)
-        configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/config/resources_demos.cfg.in
-                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources.cfg)
-    else()
-        configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/config/resources.cfg.in
-                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources.cfg)
+        configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/config/demos.cfg.in
+                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/demos.cfg)
     endif()
 endif()

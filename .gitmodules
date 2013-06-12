@@ -43,3 +43,6 @@
 [submodule "dependencies/OIS"]
 	path = dependencies/OIS
 	url = git://github.com/Kanma/OIS.git
+[submodule "dependencies/rapidjson"]
+	path = dependencies/rapidjson
+	url = git://github.com/Kanma/rapidjson.git

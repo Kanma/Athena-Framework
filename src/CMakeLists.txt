@@ -5,26 +5,24 @@ configure_file(${ATHENA_FRAMEWORK_SOURCE_DIR}/src/module.cpp.in
 
 # List the headers files
 set(HEADERS ${XMAKE_BINARY_DIR}/include/Athena/Config.h
-           ../include/Athena/Configuration.h
-           ../include/Athena/Engine.h
-           ../include/Athena/Prerequisites.h
-           ../include/Athena/GameStates/GameStateManager.h
-           ../include/Athena/GameStates/IGameState.h
-           ../include/Athena/Tasks/GameStateTask.h
-           ../include/Athena/Tasks/GameStateStackTask.h
-           ../include/Athena/Tasks/GraphicsTask.h
-           ../include/Athena/Tasks/InputsTask.h
-           ../include/Athena/Tasks/PhysicsTask.h
-           ../include/Athena/Tasks/Task.h
-           ../include/Athena/Tasks/TaskEnd.h
-           ../include/Athena/Tasks/TaskManager.h
-           ../include/Athena/Tasks/TaskStart.h
+            ../include/Athena/Engine.h
+            ../include/Athena/Prerequisites.h
+            ../include/Athena/GameStates/GameStateManager.h
+            ../include/Athena/GameStates/IGameState.h
+            ../include/Athena/Tasks/GameStateTask.h
+            ../include/Athena/Tasks/GameStateStackTask.h
+            ../include/Athena/Tasks/GraphicsTask.h
+            ../include/Athena/Tasks/InputsTask.h
+            ../include/Athena/Tasks/PhysicsTask.h
+            ../include/Athena/Tasks/Task.h
+            ../include/Athena/Tasks/TaskEnd.h
+            ../include/Athena/Tasks/TaskManager.h
+            ../include/Athena/Tasks/TaskStart.h
 )
 
 
 # List the source files
 set(SRCS ${XMAKE_BINARY_DIR}/generated/Athena/module.cpp
-         Configuration.cpp
          Engine.cpp
          GameStates/GameStateManager.cpp
          Tasks/GameStateTask.cpp

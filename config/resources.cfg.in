@@ -1,3 +1,0 @@
-[General]
-Zip=@CONFIG_MEDIA_PATH@/Packs/AthenaMedia.zip
-FileSystem=@CONFIG_MEDIA_PATH@

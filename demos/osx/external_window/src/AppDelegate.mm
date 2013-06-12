@@ -12,7 +12,7 @@ using namespace Athena::GameStates;
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification
 {
     // Initialize Athena
-    engine.setup("athena.cfg");
+    engine.setup(std::string("demos.cfg"));
 
     // Create the Ogre view
     NSRect frame = [ogreView frame];

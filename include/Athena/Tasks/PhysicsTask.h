@@ -23,8 +23,11 @@ class ATHENA_FRAMEWORK_SYMBOL PhysicsTask: public Tasks::Task
 public:
     //-----------------------------------------------------------------------------------
     /// @brief  Constructor
+    ///
+    /// @param  nbMaxSubSteps   Maximum number of substeps during a simulation
+    /// @param  fixedTimeStep   Fixed timesteps used for the simulations
     //-----------------------------------------------------------------------------------
-    PhysicsTask();
+    PhysicsTask(unsigned int nbMaxSubSteps = 1, float fixedTimeStep = 1.0f / 60.0f);
 
     //-----------------------------------------------------------------------------------
     /// @brief  Destructor
@@ -49,6 +52,12 @@ public:
     /// @brief  Stop the task
     //-----------------------------------------------------------------------------------
     virtual void stop();
+
+
+    //_____ Attributes __________
+protected:
+    unsigned int m_nbMaxSubSteps;   ///< Maximum number of substeps during a simulation
+    float        m_fixedTimeStep;   ///< Fixed timesteps used for the simulations
 };
 
 }

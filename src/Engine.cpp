@@ -5,13 +5,15 @@
 */
 
 #include <Athena/Engine.h>
-#include <Athena-Core/Data/ConfigFile.h>
 
 #include <Athena-Entities/ScenesManager.h>
 #include <Athena-Entities/ComponentsManager.h>
 
 #include <Athena-Core/Log/LogManager.h>
+#include <Athena-Core/Log/ConsoleLogListener.h>
 #include <Athena-Core/Log/XMLLogListener.h>
+#include <Athena-Core/Data/LocationManager.h>
+#include <Athena-Core/Data/Serialization.h>
 #include <Athena-Core/Utils/StringConverter.h>
 
 #include <Athena-Graphics/OgreLogListener.h>
@@ -116,13 +118,12 @@ std::string macBundlePath()
 /****************************** CONSTRUCTION / DESTRUCTION *****************************/
 
 Engine::Engine()
-: m_pTaskManager(0), m_pGameStateManager(0), m_pScenesManager(0), m_pComponentsManager(0),
-  m_pInputsUnit(0),
+: m_pLocationManager(0), m_pTaskManager(0), m_pGameStateManager(0), m_pScenesManager(0),
+  m_pComponentsManager(0), m_pInputsUnit(0),
 #if ATHENA_FRAMEWORK_SCRIPTING
   m_pScriptingManager(0),
 #endif
-  m_pOgreLogListener(0), m_bOwnOgreLogManager(true),
-  m_pMainWindow(0)
+  m_pOgreLogListener(0), m_bOwnOgreLogManager(true), m_pMainWindow(0)
 {
 }
 
@@ -155,44 +156,53 @@ void Engine::setup(const std::string& strConfigFile)
     // Assertions
     assert(!strConfigFile.empty() && "No configuration file supplied");
 
-    // Open the configuration file
-    m_configuration.load(strConfigFile);
+    // Load the configuration file
+    rapidjson::Document document;
+    loadJSONFile(strConfigFile, document);
 
-    setup();
+    setup(document);
 }
 
 //---------------------------------------------------------------------
 
-void Engine::setup(const Configuration& configuration)
-{
-    // Copy the configuration
-    m_configuration = configuration;
-
-    setup();
-}
-
-//---------------------------------------------------------------------
-
-void Engine::setup()
+void Engine::setup(const rapidjson::Value& configuration)
 {
     LogManager* pLogManager = LogManager::getSingletonPtr();
 
     // Create the log manager if it isn't already done
     if (!pLogManager)
-    {
         pLogManager = new LogManager();
 
-        if (!m_configuration.log.strAthenaLogFile.empty())
+    // Create the log listener if necessary
+    if (configuration.HasMember("log") && configuration["log"].IsObject())
+    {
+        const rapidjson::Value& logConfig = configuration["log"];
+
+        ILogListener* pLogListener = 0;
+
+        std::string logKind = "console";
+        if (logConfig.HasMember("kind") && logConfig["kind"].IsString())
+            logKind = logConfig["kind"].GetString();
+
+        if (logConfig.HasMember("file") && logConfig["file"].IsString())
         {
-            // TODO: Create the right kind of listener, depending of the value of (m_configuration.log.strAthenaLogKind
-
-            XMLLogListener* pLogListener = new XMLLogListener(m_configuration.log.strAthenaLogFile);
-
-            if (pLogListener->isFileOpen())
-                pLogManager->addListener(pLogListener, true);
-            else
-                delete pLogListener;
+            if (logKind == "xml")
+            {
+                pLogListener = new XMLLogListener(logConfig["file"].GetString());
+                if (!static_cast<XMLLogListener*>(pLogListener)->isFileOpen())
+                {
+                    delete pLogListener;
+                    pLogListener = 0;
+                }
+            }
         }
+        else if (logKind == "console")
+        {
+            pLogListener = new ConsoleLogListener();
+        }
+
+        if (pLogListener)
+            pLogManager->addListener(pLogListener, true);
     }
 
     ATHENA_LOG_EVENT("Creation of the engine");
@@ -206,24 +216,21 @@ void Engine::setup()
             Ogre::LogManager* pOgreLogManager = new Ogre::LogManager();
             m_bOwnOgreLogManager = true;
 
-            // Test if we must create a real file, or a pure redirection to the Athena's log system
-            Ogre::Log* pLog = 0;
-            if (!m_configuration.log.strOgreLogFile.empty())
-                pLog = pOgreLogManager->createLog(m_configuration.log.strOgreLogFile, true, true);
-            else if (m_configuration.log.bRedirectOgreLog)
-                pLog = pOgreLogManager->createLog("Ogre.log", true, true, true);
-
-            // Test if we must create a redirection to the Athena's log system
-            if (pLog && m_configuration.log.bRedirectOgreLog)
-            {
-                m_pOgreLogListener = new OgreLogListener();
-                pLog->addListener(m_pOgreLogListener);
-            }
+            // Redirect the Ogre log to the Athena's log system
+            Ogre::Log* pLog = pOgreLogManager->createLog("Ogre.log", true, false, true);
+            m_pOgreLogListener = new OgreLogListener();
+            pLog->addListener(m_pOgreLogListener);
         }
         else
         {
             m_bOwnOgreLogManager = false;
         }
+
+        // Create the Location Manager
+        m_pLocationManager = new LocationManager();
+
+        if (configuration.HasMember("locations") && configuration["locations"].IsObject())
+            m_pLocationManager->addLocations(configuration["locations"]);
 
         // Create the Task Manager
         m_pTaskManager = new TaskManager();
@@ -250,29 +257,7 @@ void Engine::setup()
         // m_pNetworkManager = new NetworkManager();
 
         // Initializes the Graphics module & Ogre
-        assert(!m_configuration.athena.strPluginsFile.empty());
-        assert(!m_configuration.athena.strOgreConfigFile.empty());
-        Root* pOgreRoot = Graphics::initialize(m_configuration.athena.strPluginsFile,
-                                               m_configuration.athena.strOgreConfigFile,
-                                               (m_configuration.log.strOgreLogFile.empty() ? "Ogre.log" : m_configuration.log.strOgreLogFile));
-
-        // Load config settings from ogre.cfg
-        if (!pOgreRoot->restoreConfig())
-        {
-            // If there is no config file, show the configuration dialog
-            if (!pOgreRoot->showConfigDialog())
-            {
-                OGRE_EXCEPT(0,
-                            "Failed to process '" + m_configuration.athena.strOgreConfigFile + "'",
-                            __FUNCTION__);
-            }
-        }
-
-        // Setup the resources if a file was supplied
-        if (!m_configuration.athena.strResourcesFile.empty())
-            setupResources(m_configuration.athena.strResourcesFile);
-
-        // Initialise Ogre
+        Root* pOgreRoot = Graphics::initialize(configuration["graphics"]);
         pOgreRoot->initialise(false);
 
         // Initialize the Physics module
@@ -300,13 +285,6 @@ void Engine::setup()
 
         OGRE_EXCEPT(0, "Failed to create the engine, unknown exception", __FUNCTION__);
     }
-}
-
-//---------------------------------------------------------------------
-
-const Configuration* Engine::getConfiguration() const
-{
-    return &m_configuration;
 }
 
 //---------------------------------------------------------------------
@@ -351,6 +329,9 @@ void Engine::destroy()
         m_pMainWindow   = 0;
     }
 
+    delete m_pLocationManager;
+    m_pLocationManager = 0;
+
     if (m_bOwnOgreLogManager)
     {
         delete LogManager::getSingletonPtr();
@@ -363,69 +344,19 @@ void Engine::destroy()
 
 //---------------------------------------------------------------------
 
-void Engine::setupResources(const std::string& strFileName)
-{
-    // Declarations
-    Ogre::ConfigFile    cfgFile;
-    string              strSecName, strTypeName, strArchName;
-
-    // Load resource paths from config file
-    cfgFile.load(strFileName);
-
-    // Go through all sections & settings in the file
-    Ogre::ConfigFile::SectionIterator sectionIter = cfgFile.getSectionIterator();
-    while (sectionIter.hasMoreElements())
-    {
-        strSecName = sectionIter.peekNextKey();
-        Ogre::ConfigFile::SettingsMultiMap* settings = sectionIter.getNext();
-        Ogre::ConfigFile::SettingsMultiMap::iterator i;
-        for (i = settings->begin(); i != settings->end(); ++i)
-        {
-            strTypeName = i->first;
-            strArchName = i->second;
-#if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
-            // OS X does not set the working directory relative to the app,
-            // In order to make things portable on OS X we need to provide
-            // the loading with it's own bundle path location
-            ResourceGroupManager::getSingleton().addResourceLocation(string(macBundlePath() + "/" + strArchName),
-                                                                     strTypeName, strSecName);
-#else
-            ResourceGroupManager::getSingleton().addResourceLocation(strArchName, strTypeName, strSecName);
-#endif
-        }
-    }
-}
-
-//---------------------------------------------------------------------
-
 RenderWindow* Engine::createRenderWindow(size_t existingwindowhandle, const std::string& strName,
                                          int width, int height, bool fullscreen)
 {
-    // Declarations
-    NameValuePairList miscParams;
-    RenderWindow*     theWindow;
+    RenderWindow* pWindow = Graphics::createRenderWindow(existingwindowhandle, strName,
+                                                         width, height, fullscreen);
 
-    miscParams["externalWindowHandle"] = StringConverter::toString(existingwindowhandle);
-
-    #if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
-        miscParams["macAPI"] = "cocoa";
-    #endif
-
-    theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
-
-    if (!m_pMainWindow)
+    if (!m_pMainWindow && pWindow)
     {
-        m_pMainWindow = theWindow;
-
-        // Initialise the resources, parse scripts, etc
-        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
+        m_pMainWindow = pWindow;
         createInputsUnit();
-
-        //  new GUIManager();
     }
 
-    return theWindow;
+    return pWindow;
 }
 
 //---------------------------------------------------------------------
@@ -434,31 +365,16 @@ RenderWindow* Engine::createRenderWindow(const std::string& strName,
                                          const std::string& strTitle,
                                          int width, int height, bool fullscreen)
 {
-    // Declarations
-    NameValuePairList miscParams;
-    RenderWindow*     theWindow;
+    RenderWindow* pWindow = Graphics::createRenderWindow(strName, strTitle, width, height,
+                                                         fullscreen);
 
-    miscParams["title"] = strTitle;
-
-    #if ATHENA_PLATFORM == ATHENA_PLATFORM_APPLE
-        miscParams["macAPI"] = "cocoa";
-    #endif
-
-    theWindow = Root::getSingletonPtr()->createRenderWindow(strName, width, height, fullscreen, &miscParams);
-
-    if (!m_pMainWindow)
+    if (!m_pMainWindow && pWindow)
     {
-        m_pMainWindow = theWindow;
-
-        // Initialise the resources, parse scripts, etc
-        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
+        m_pMainWindow = pWindow;
         createInputsUnit();
-
-        //  new GUIManager();
     }
 
-    return theWindow;
+    return pWindow;
 }
 
 //---------------------------------------------------------------------

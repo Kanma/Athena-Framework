@@ -19,7 +19,10 @@
             {
                 "group": "General",
                 "fileSystem": [
-                    "@CONFIG_ATHENA_MEDIA_PATH@"
+                    "@CONFIG_ATHENA_MEDIA_PATH@",
+                    "@CONFIG_DEMOS_MEDIA_PATH@/materials",
+                    "@CONFIG_DEMOS_MEDIA_PATH@/meshes",
+                    "@CONFIG_DEMOS_MEDIA_PATH@/textures"
                 ],
                 "zip": [
                     "@CONFIG_ATHENA_MEDIA_PATH@/Packs/AthenaMedia.zip"
