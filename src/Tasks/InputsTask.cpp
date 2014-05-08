@@ -1,7 +1,7 @@
-/** @file	InputsTask.cpp
-	@author	Philip Abbet
+/** @file   InputsTask.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::InputsTask'
+    Implementation of the class 'Athena::Tasks::InputsTask'
 */
 
 #include <Athena/Tasks/InputsTask.h>
@@ -29,17 +29,17 @@ InputsTask::~InputsTask()
 
 bool InputsTask::start()
 {
-	// Assertions
-	assert(InputsUnit::getSingletonPtr());
+    // Assertions
+    assert(InputsUnit::getSingletonPtr());
 
-	return true;
+    return true;
 }
 
 //---------------------------------------------------------------------
 
 void InputsTask::update()
 {
-	InputsUnit::getSingletonPtr()->process();
+    InputsUnit::getSingletonPtr()->process();
 }
 
 //---------------------------------------------------------------------

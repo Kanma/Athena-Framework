@@ -1,7 +1,7 @@
-/** @file	PhysicsTask.cpp
-	@author	Philip Abbet
+/** @file   PhysicsTask.cpp
+    @author Philip Abbet
 
-	Implementation of the class 'Athena::Tasks::PhysicsTask'
+    Implementation of the class 'Athena::Tasks::PhysicsTask'
 */
 
 #include <Athena/Tasks/PhysicsTask.h>
@@ -18,7 +18,8 @@ using namespace Athena::Physics;
 
 /****************************** CONSTRUCTION / DESTRUCTION *****************************/
 
-PhysicsTask::PhysicsTask()
+PhysicsTask::PhysicsTask(unsigned int nbMaxSubSteps, float fixedTimeStep)
+: m_nbMaxSubSteps(nbMaxSubSteps), m_fixedTimeStep(fixedTimeStep)
 {
 }
 
@@ -33,7 +34,7 @@ PhysicsTask::~PhysicsTask()
 
 bool PhysicsTask::start()
 {
-	return true;
+    return true;
 }
 
 //---------------------------------------------------------------------
@@ -42,10 +43,9 @@ void PhysicsTask::update()
 {
     assert(Engine::getSingletonPtr());
     assert(ScenesManager::getSingletonPtr());
-    
+
     float elapsed = Engine::getSingletonPtr()->getTaskManager()->getElapsedSeconds();
-    const Configuration* pConfig = Engine::getSingletonPtr()->getConfiguration();
-    
+
     ScenesManager::tScenesIterator iter =
         ScenesManager::getSingletonPtr()->getScenesIterator();
     while (iter.hasMoreElements())
@@ -55,12 +55,9 @@ void PhysicsTask::update()
         {
             World* pWorld = dynamic_cast<World*>(pScene->getComponent(
                         Entities::tComponentID(Entities::COMP_PHYSICAL, World::DEFAULT_NAME)));
-            
+
             if (pWorld)
-            {
-                pWorld->stepSimulation(elapsed, pConfig->physics.nbMaxSubSteps,
-                                       pConfig->physics.fixedTimeStep);
-            }
+                pWorld->stepSimulation(elapsed, m_nbMaxSubSteps, m_fixedTimeStep);
         }
     }
 }

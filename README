@@ -1,6 +1,7 @@
 ********************************************************************************
 *                                                                              *
 *                               Athena-Framework                               *
+*                                Version 1.0.1                                 *
 *                    http://github.com/Kanma/Athena-Framework                  *
 *                                                                              *
 ********************************************************************************
@@ -12,6 +13,55 @@
 
 The Athena Game Framework, which glue together all the modules and add some
 game-related systems (Tasks, Game States).
+
+
+---------------------------------------
+- Dependencies
+---------------------------------------
+
+Athena-Framework requires the following dependencies:
+
+   - XMake
+   - Athena-Math
+   - Athena-Core
+   - Athena-Entities
+   - Athena-Graphics
+   - Athena-Physics
+   - Athena-Inputs
+   - FreeImage
+   - freetype
+   - Ogre
+   - OIS
+   - Bullet
+   - rapidjson
+   - UnitTest++
+   - zlib
+   - zziplib
+
+They are provided as GIT submodules of this repository and will be compiled
+automatically during the compilation of Athena-Framework.
+
+To download them, do:
+
+    somewhere$ cd <path/to/the/source/of/Athena-Framework>
+    Athena-Framework$ git submodule init
+    Athena-Framework$ git submodule update
+
+
+---------------------------------------
+- Compilation
+---------------------------------------
+
+(Note: you'll need to install CMake to compile Athena-Framework)
+
+To compile Athena-Framework (and all its dependencies), do:
+
+    somewhere$ mkdir build
+    somewhere$ cd build
+    build$ cmake <path/to/the/source/of/Athena-Framework>
+    build$ make
+
+The library will be put in build/bin/
 
 
 ---------------------------------------

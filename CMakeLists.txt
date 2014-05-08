@@ -5,41 +5,22 @@ project(ATHENA_FRAMEWORK)
 ##########################################################################################
 # Settings
 
-if (NOT DEFINED ATHENA_FRAMEWORK_STATIC)
-    set(ATHENA_FRAMEWORK_STATIC OFF CACHE BOOL "Build Athena-Framework as a static library")
+if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
+    set(ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
 endif()
 
-if (NOT DEFINED ATHENA_FRAMEWORK_USE_DEFAULT_CONFIGURATION)
-    set(ATHENA_USE_DEFAULT_CONFIGURATION ON CACHE BOOL "Use the default configuration of Athena-Framework")
+if (NOT DEFINED ATHENA_BUILD_DEMOS)
+    set(ATHENA_BUILD_DEMOS OFF CACHE BOOL "Build the demos of the Athena Game Framework")
 endif()
 
 
 ##########################################################################################
-# Setup the dependencies
+# Library version
 
-if (NOT DEFINED ATHENA_MATH_STATIC)
-    set(ATHENA_MATH_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_CORE_STATIC)
-    set(ATHENA_CORE_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_ENTITIES_STATIC)
-    set(ATHENA_ENTITIES_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_GRAPHICS_STATIC)
-    set(ATHENA_GRAPHICS_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_PHYSICS_STATIC)
-    set(ATHENA_PHYSICS_STATIC ON)
-endif()
-
-if (NOT DEFINED ATHENA_INPUTS_STATIC)
-    set(ATHENA_INPUTS_STATIC ON)
-endif()
+set(ATHENA_FRAMEWORK_VERSION_MAJOR 1)
+set(ATHENA_FRAMEWORK_VERSION_MINOR 0)
+set(ATHENA_FRAMEWORK_VERSION_PATCH 1)
+set(ATHENA_FRAMEWORK_VERSION_SUFFIX "")
 
 
 ##########################################################################################
@@ -93,7 +74,22 @@ include("${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
 # Process subdirectories
 
 add_subdirectory(dependencies)
+
+if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
+    set(ATHENA_FRAMEWORK_SCRIPTING ON)
+else()
+    set(ATHENA_FRAMEWORK_SCRIPTING OFF)
+endif()
+
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(config)
 add_subdirectory(unittests)
+
+if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
+    add_subdirectory(scripting)
+endif()
+
+if (DEFINED ATHENA_BUILD_DEMOS AND ATHENA_BUILD_DEMOS)
+    add_subdirectory(demos)
+endif()

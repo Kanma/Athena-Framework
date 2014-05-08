@@ -1,21 +1,20 @@
-/**	@file	Engine.h
-	@author	Philip Abbet
+/** @file   Engine.h
+    @author Philip Abbet
 
-	Declaration of the class 'Athena::Engine'
+    Declaration of the class 'Athena::Engine'
 */
 
 #ifndef _ATHENA_ENGINE_H_
 #define _ATHENA_ENGINE_H_
 
 #include <Athena/Prerequisites.h>
-#include <Athena/Configuration.h>
 
 
 namespace Athena {
 
 
 //---------------------------------------------------------------------------------------
-/// @brief	Main class, represents the engine itself
+/// @brief  Main class, represents the engine itself
 ///
 /// The engine is responsible of the creation/destruction of all the subsystems.
 ///
@@ -29,166 +28,172 @@ namespace Athena {
 ///
 /// This class is a singleton.
 //---------------------------------------------------------------------------------------
-class ATHENA_SYMBOL Engine: public Utils::Singleton<Engine>
+class ATHENA_FRAMEWORK_SYMBOL Engine: public Utils::Singleton<Engine>
 {
-	//_____ Construction / Destruction __________
+    //_____ Construction / Destruction __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Constructor
+    /// @brief  Constructor
     //-----------------------------------------------------------------------------------
-	Engine();
-	
+    Engine();
+
     //-----------------------------------------------------------------------------------
-    /// @brief	Destructor
+    /// @brief  Destructor
     //-----------------------------------------------------------------------------------
-	virtual ~Engine();
-	
+    virtual ~Engine();
+
     //-----------------------------------------------------------------------------------
-    /// @brief	Returns a reference to the instance of the engine
-    /// @return	A reference to the engine
+    /// @brief  Returns a reference to the instance of the engine
+    /// @return A reference to the engine
     //-----------------------------------------------------------------------------------
-	static Engine& getSingleton();
-	
+    static Engine& getSingleton();
+
     //-----------------------------------------------------------------------------------
-    /// @brief	Returns a pointer to the instance of the engine
-    /// @return	A pointer to the engine
+    /// @brief  Returns a pointer to the instance of the engine
+    /// @return A pointer to the engine
     //-----------------------------------------------------------------------------------
-	static Engine* getSingletonPtr();
+    static Engine* getSingletonPtr();
 
 
-	//_____ Management of the engine __________
+    //_____ Management of the engine __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Setup the engine, and initialise the subsystems
-    /// @param	strConfigFile	The name of the configuration file
+    /// @brief  Setup the engine, and initialise the subsystems
+    /// @param  strConfigFile   The name of the configuration file
     //-----------------------------------------------------------------------------------
-	void setup(const std::string& strConfigFile);
-	
-    //-----------------------------------------------------------------------------------
-    /// @brief	Setup the engine, and initialise the subsystems
-    /// @param	configuration	The configuration
-    //-----------------------------------------------------------------------------------
-	void setup(const Configuration& configuration);
+    void setup(const std::string& strConfigFile);
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Returns the configuration of the engine
-    /// @return	The configuration
+    /// @brief  Setup the engine, and initialise the subsystems
+    /// @param  configuration   The configuration
     //-----------------------------------------------------------------------------------
-	const Configuration* getConfiguration() const;
-	
-    //-----------------------------------------------------------------------------------
-    /// @brief	Use an existing window as a render window
-    /// @param	existingwindowhandle	Handle of the existing window
-    /// @param	strName					Name of the window
-    /// @param	width					Width of the window
-    /// @param	height					Height of the window
-    /// @param	fullscreen				Indicates if the rendering must be done on the full
-    ///									screen
-    /// @return							The render window, 0 if failed
-    //-----------------------------------------------------------------------------------
-	Ogre::RenderWindow* createRenderWindow(size_t existingwindowhandle,
-	                                       const std::string& strName,
-										   int width, int height,
-										   bool fullscreen);
-										   
-    //-----------------------------------------------------------------------------------
-    /// @brief	Create a render window
-    /// @param	strName					Name of the window
-    /// @param	strTitle				Title of the window
-    /// @param	width					Width of the window
-    /// @param	height					Height of the window
-    /// @param	fullscreen				Indicates if the rendering must be done on the full
-    ///									screen
-    /// @return							The render window, 0 if failed
-    //-----------------------------------------------------------------------------------
-	Ogre::RenderWindow* createRenderWindow(const std::string& strName,
-	                                       const std::string& strTitle,
-										   int width, int height,
-										   bool fullscreen);
+    void setup(const rapidjson::Value& configuration);
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Retrieves the main window of the application
+    /// @brief  Use an existing window as a render window
+    /// @param  existingwindowhandle    Handle of the existing window
+    /// @param  strName                 Name of the window
+    /// @param  width                   Width of the window
+    /// @param  height                  Height of the window
+    /// @param  fullscreen              Indicates if the rendering must be done on the
+    ///                                 full screen
+    /// @return                         The render window, 0 if failed
+    //-----------------------------------------------------------------------------------
+    Ogre::RenderWindow* createRenderWindow(size_t existingwindowhandle,
+                                           const std::string& strName,
+                                           int width, int height,
+                                           bool fullscreen);
+
+    //-----------------------------------------------------------------------------------
+    /// @brief  Create a render window
+    /// @param  strName                 Name of the window
+    /// @param  strTitle                Title of the window
+    /// @param  width                   Width of the window
+    /// @param  height                  Height of the window
+    /// @param  fullscreen              Indicates if the rendering must be done on the
+    ///                                 full screen
+    /// @return                         The render window, 0 if failed
+    //-----------------------------------------------------------------------------------
+    Ogre::RenderWindow* createRenderWindow(const std::string& strName,
+                                           const std::string& strTitle,
+                                           int width, int height,
+                                           bool fullscreen);
+
+    //-----------------------------------------------------------------------------------
+    /// @brief  Retrieves the main window of the application
     //-----------------------------------------------------------------------------------
     inline Ogre::RenderWindow* getMainWindow()
     {
         return m_pMainWindow;
-	}
-										   
+    }
+
     //-----------------------------------------------------------------------------------
-    /// @brief	Retrieves the Task Manager
+    /// @brief  Retrieves the Location Manager
     //-----------------------------------------------------------------------------------
-	inline Tasks::TaskManager* getTaskManager()
-	{
+    inline Data::LocationManager* getLocationManager()
+    {
+        return m_pLocationManager;
+    }
+
+    //-----------------------------------------------------------------------------------
+    /// @brief  Retrieves the Task Manager
+    //-----------------------------------------------------------------------------------
+    inline Tasks::TaskManager* getTaskManager()
+    {
         return m_pTaskManager;
-	}
+    }
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Retrieves the Game State Manager
+    /// @brief  Retrieves the Game State Manager
     //-----------------------------------------------------------------------------------
-	inline GameStates::GameStateManager* getGameStateManager()
-	{
+    inline GameStates::GameStateManager* getGameStateManager()
+    {
         return m_pGameStateManager;
-	}
+    }
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Retrieves the Scenes Manager
+    /// @brief  Retrieves the Scenes Manager
     //-----------------------------------------------------------------------------------
-	inline Entities::ScenesManager* getScenesManager()
-	{
+    inline Entities::ScenesManager* getScenesManager()
+    {
         return m_pScenesManager;
-	}
+    }
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Retrieves the Components Manager
+    /// @brief  Retrieves the Components Manager
     //-----------------------------------------------------------------------------------
-	inline Entities::ComponentsManager* getComponentsManager()
-	{
+    inline Entities::ComponentsManager* getComponentsManager()
+    {
         return m_pComponentsManager;
-	}
+    }
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Retrieves the Inputs Unit
+    /// @brief  Retrieves the Inputs Unit
     //-----------------------------------------------------------------------------------
-	inline Inputs::InputsUnit* getInputsUnit()
-	{
+    inline Inputs::InputsUnit* getInputsUnit()
+    {
         return m_pInputsUnit;
-	}
+    }
 
+#if ATHENA_FRAMEWORK_SCRIPTING
+    //-----------------------------------------------------------------------------------
+    /// @brief  Retrieves the Scripting Manager
+    //-----------------------------------------------------------------------------------
+    inline Scripting::ScriptingManager* getScriptingManager()
+    {
+        return m_pScriptingManager;
+    }
+#endif
+
+
+    //-----------------------------------------------------------------------------------
+    /// @brief  Destroy the subsystems
+    //-----------------------------------------------------------------------------------
+    void destroy();
 
 private:
     //-----------------------------------------------------------------------------------
-    /// @brief	Setup the engine, and initialise the subsystems
+    /// @brief  Create the Inputs Unit
     //-----------------------------------------------------------------------------------
-	void setup();
-	
-    //-----------------------------------------------------------------------------------
-    /// @brief	Setup the resources used by the game
-    /// @param	strFileName		Name of the file containing the paths to the resources
-    //-----------------------------------------------------------------------------------
-	void setupResources(const std::string& strFileName);
-	
-    //-----------------------------------------------------------------------------------
-    /// @brief	Destroy the subsystems
-    //-----------------------------------------------------------------------------------
-	void destroy();
-	
-    //-----------------------------------------------------------------------------------
-    /// @brief	Create the Inputs Unit
-    //-----------------------------------------------------------------------------------
-	void createInputsUnit();
+    void createInputsUnit();
 
 
-	//_____ Attributes __________
+    //_____ Attributes __________
 private:
-	Configuration	                m_configuration;		///< The configuration of the engine
+    Data::LocationManager*          m_pLocationManager;     ///< The Location Manager
     Tasks::TaskManager*             m_pTaskManager;         ///< The Task Manager
     GameStates::GameStateManager*   m_pGameStateManager;    ///< The Game State Manager
     Entities::ScenesManager*        m_pScenesManager;       ///< The Scenes Manager
-	Entities::ComponentsManager*    m_pComponentsManager;   ///< The Components Manager
+    Entities::ComponentsManager*    m_pComponentsManager;   ///< The Components Manager
     Inputs::InputsUnit*             m_pInputsUnit;          ///< The Inputs Unit
+
+#if ATHENA_FRAMEWORK_SCRIPTING
+    Scripting::ScriptingManager*    m_pScriptingManager;    ///< The Scripting Manager
+#endif
+
     Graphics::OgreLogListener*      m_pOgreLogListener;     ///< The Ogre Log Listener
-	bool			                m_bOwnOgreLogManager;	///< Indicates if the engine is responsible to delete
-											                ///  the Log manager of Ogre
+    bool                            m_bOwnOgreLogManager;   ///< Indicates if the engine is responsible to delete
+                                                            ///  the Log manager of Ogre
     Ogre::RenderWindow*             m_pMainWindow;          ///< Main window of the application
 };
 

@@ -1,6 +1,8 @@
 #include <UnitTest++.h>
 #include <Athena/GameStates/GameStateManager.h>
 #include <Athena/Tasks/TaskManager.h>
+#include <Athena-Core/Log/LogManager.h>
+#include <Athena-Core/Log/XMLLogListener.h>
 #include "mocks/GameState.h"
 
 using namespace Athena;
@@ -12,16 +14,16 @@ using namespace Ogre;
 struct GameStatesTestEnvironment
 {
     GameStateManager* pGameStateManager;
-    
-	GameStatesTestEnvironment()
-	{
-		pGameStateManager = new GameStateManager();
-	}
 
-	~GameStatesTestEnvironment()
-	{
-		delete pGameStateManager;
-	}
+    GameStatesTestEnvironment()
+    {
+        pGameStateManager = new GameStateManager();
+    }
+
+    ~GameStatesTestEnvironment()
+    {
+        delete pGameStateManager;
+    }
 };
 
 
@@ -29,212 +31,216 @@ struct GameStatesTestEnvironment
 struct GameStatesTestEnvironmentWith3States
 {
     GameStateManager* pGameStateManager;
-	CMockGameState* pState1;
-	CMockGameState* pState2;
-	CMockGameState* pState3;
+    MockGameState* pState1;
+    MockGameState* pState2;
+    MockGameState* pState3;
 
 
-	GameStatesTestEnvironmentWith3States()
-	{
-		pGameStateManager = new GameStateManager();
+    GameStatesTestEnvironmentWith3States()
+    {
+        pGameStateManager = new GameStateManager();
 
-		pState1 = new CMockGameState();
-		pGameStateManager->registerState(1, pState1);
+        pState1 = new MockGameState();
+        pGameStateManager->registerState(1, pState1);
 
-		pState2 = new CMockGameState();
-		pGameStateManager->registerState(2, pState2);
+        pState2 = new MockGameState();
+        pGameStateManager->registerState(2, pState2);
 
-		pState3 = new CMockGameState();
-		pGameStateManager->registerState(3, pState3);
-	}
+        pState3 = new MockGameState();
+        pGameStateManager->registerState(3, pState3);
+    }
 
-	~GameStatesTestEnvironmentWith3States()
-	{
-		delete pGameStateManager;
-	}
+    ~GameStatesTestEnvironmentWith3States()
+    {
+        delete pGameStateManager;
+    }
 };
 
 
 
 SUITE(GameStatesManager)
 {
-	TEST_FIXTURE(GameStatesTestEnvironment, Fixture)
-	{
-		CHECK(pGameStateManager);
-	}
+    TEST_FIXTURE(GameStatesTestEnvironment, Fixture)
+    {
+        CHECK(pGameStateManager);
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, Fixture)
-	{
-		CHECK(pGameStateManager);
-		CHECK(pState1);
-		CHECK(pState2);
-		CHECK(pState3);
-	}
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, Fixture)
+    {
+        CHECK(pGameStateManager);
+        CHECK(pState1);
+        CHECK(pState2);
+        CHECK(pState3);
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironment, Register)
-	{
-		CHECK(pGameStateManager->registerState(1, new CMockGameState()));
-		CHECK(pGameStateManager->registerState(2, new CMockGameState()));
-		CHECK(pGameStateManager->registerState(3, new CMockGameState()));
-	}
+    TEST_FIXTURE(GameStatesTestEnvironment, Register)
+    {
+        CHECK(pGameStateManager->registerState(1, new MockGameState()));
+        CHECK(pGameStateManager->registerState(2, new MockGameState()));
+        CHECK(pGameStateManager->registerState(3, new MockGameState()));
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironment, RegisterStatesWithSameIDFail)
-	{
-		CHECK(pGameStateManager->registerState(1, new CMockGameState()));
-		CHECK(!pGameStateManager->registerState(1, new CMockGameState()));
-	}
+    TEST_FIXTURE(GameStatesTestEnvironment, RegisterStatesWithSameIDFail)
+    {
+        // Disable error output on stderr
+        Athena::Log::LogManager logManager;
+        logManager.addListener(new XMLLogListener("test_log.xml"), true);
+
+        CHECK(pGameStateManager->registerState(1, new MockGameState()));
+        CHECK(!pGameStateManager->registerState(1, new MockGameState()));
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushOneState)
-	{
-		pGameStateManager->pushState(1);
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushOneState)
+    {
+        pGameStateManager->pushState(1);
 
-		CHECK(pState1->bEnterCalled);
-		CHECK(!pState2->bEnterCalled);
-		CHECK(!pState3->bEnterCalled);
-	}
-
-
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushTwoStates)
-	{
-		pGameStateManager->pushState(1);
-		pGameStateManager->pushState(2);
-
-		CHECK(pState1->bEnterCalled);
-		CHECK(!pState1->bPauseCalled);
-		CHECK(!pState2->bEnterCalled);
-
-		pState1->reset();
-
-		pGameStateManager->update();
-
-		CHECK(pState1->bPauseCalled);
-		CHECK(pState2->bEnterCalled);
-	}
+        CHECK(pState1->bEnterCalled);
+        CHECK(!pState2->bEnterCalled);
+        CHECK(!pState3->bEnterCalled);
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushThreeStates)
-	{
-		pGameStateManager->pushState(1);
-		pGameStateManager->pushState(2);
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushTwoStates)
+    {
+        pGameStateManager->pushState(1);
+        pGameStateManager->pushState(2);
 
-		pGameStateManager->update();
+        CHECK(pState1->bEnterCalled);
+        CHECK(!pState1->bPauseCalled);
+        CHECK(!pState2->bEnterCalled);
 
-		pGameStateManager->pushState(3);
+        pState1->reset();
 
-		pState1->reset();
-		pState2->reset();
+        pGameStateManager->update();
 
-		pGameStateManager->update();
-
-		CHECK(pState2->bPauseCalled);
-		CHECK(pState3->bEnterCalled);
-	}
-
-
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushThreeStatesOnSameFrame)
-	{
-		pGameStateManager->pushState(1);
-		pGameStateManager->pushState(2);
-		pGameStateManager->pushState(3);
-
-		pState1->reset();
-		pState2->reset();
-		pState3->reset();
-
-		pGameStateManager->update();
-
-		CHECK(pState1->bPauseCalled);
-		CHECK(!pState2->bEnterCalled);
-		CHECK(pState3->bEnterCalled);
-	}
+        CHECK(pState1->bPauseCalled);
+        CHECK(pState2->bEnterCalled);
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, Pop)
-	{
-		pGameStateManager->pushState(1);
-		pGameStateManager->pushState(2);
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushThreeStates)
+    {
+        pGameStateManager->pushState(1);
+        pGameStateManager->pushState(2);
 
-		pGameStateManager->update();
+        pGameStateManager->update();
 
-		pState1->reset();
-		pState2->reset();
+        pGameStateManager->pushState(3);
 
-		pGameStateManager->popState();
+        pState1->reset();
+        pState2->reset();
 
-		CHECK(!pState1->bResumeCalled);
-		CHECK(!pState2->bExitCalled);
+        pGameStateManager->update();
 
-		pGameStateManager->update();
-
-		CHECK(pState1->bResumeCalled);
-		CHECK(pState2->bExitCalled);
-	}
+        CHECK(pState2->bPauseCalled);
+        CHECK(pState3->bEnterCalled);
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PopAll)
-	{
-		pGameStateManager->pushState(1);
-		pGameStateManager->pushState(2);
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PushThreeStatesOnSameFrame)
+    {
+        pGameStateManager->pushState(1);
+        pGameStateManager->pushState(2);
+        pGameStateManager->pushState(3);
 
-		pGameStateManager->update();
+        pState1->reset();
+        pState2->reset();
+        pState3->reset();
 
-		pGameStateManager->pushState(3);
+        pGameStateManager->update();
 
-		pGameStateManager->update();
-
-		pState1->reset();
-		pState2->reset();
-		pState3->reset();
-
-		pGameStateManager->popAllStates();
-
-		CHECK(!pState1->bExitCalled);
-		CHECK(!pState2->bExitCalled);
-		CHECK(!pState3->bExitCalled);
-
-		pGameStateManager->update();
-
-		CHECK(pState1->bExitCalled);
-		CHECK(pState2->bExitCalled);
-		CHECK(pState3->bExitCalled);
-	}
+        CHECK(pState1->bPauseCalled);
+        CHECK(!pState2->bEnterCalled);
+        CHECK(pState3->bEnterCalled);
+    }
 
 
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, Change)
-	{
-		pGameStateManager->pushState(1);
-		pGameStateManager->pushState(2);
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, Pop)
+    {
+        pGameStateManager->pushState(1);
+        pGameStateManager->pushState(2);
 
-		pGameStateManager->update();
+        pGameStateManager->update();
 
-		pState1->reset();
-		pState2->reset();
+        pState1->reset();
+        pState2->reset();
 
-		pGameStateManager->changeState(3);
+        pGameStateManager->popState();
 
-		CHECK(!pState2->bExitCalled);
-		CHECK(!pState3->bEnterCalled);
+        CHECK(!pState1->bResumeCalled);
+        CHECK(!pState2->bExitCalled);
 
-		pGameStateManager->update();
+        pGameStateManager->update();
 
-		CHECK(pState2->bExitCalled);
-		CHECK(pState3->bEnterCalled);
-	}
+        CHECK(pState1->bResumeCalled);
+        CHECK(pState2->bExitCalled);
+    }
 
-    
-	TEST_FIXTURE(GameStatesTestEnvironmentWith3States, ProcessCurrent)
-	{
-		pGameStateManager->pushState(1);
 
-		CHECK(!pState1->bProcessCalled);
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, PopAll)
+    {
+        pGameStateManager->pushState(1);
+        pGameStateManager->pushState(2);
 
-		pGameStateManager->processCurrentState();
+        pGameStateManager->update();
 
-		CHECK(pState1->bProcessCalled);
-	}
+        pGameStateManager->pushState(3);
+
+        pGameStateManager->update();
+
+        pState1->reset();
+        pState2->reset();
+        pState3->reset();
+
+        pGameStateManager->popAllStates();
+
+        CHECK(!pState1->bExitCalled);
+        CHECK(!pState2->bExitCalled);
+        CHECK(!pState3->bExitCalled);
+
+        pGameStateManager->update();
+
+        CHECK(pState1->bExitCalled);
+        CHECK(pState2->bExitCalled);
+        CHECK(pState3->bExitCalled);
+    }
+
+
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, Change)
+    {
+        pGameStateManager->pushState(1);
+        pGameStateManager->pushState(2);
+
+        pGameStateManager->update();
+
+        pState1->reset();
+        pState2->reset();
+
+        pGameStateManager->changeState(3);
+
+        CHECK(!pState2->bExitCalled);
+        CHECK(!pState3->bEnterCalled);
+
+        pGameStateManager->update();
+
+        CHECK(pState2->bExitCalled);
+        CHECK(pState3->bEnterCalled);
+    }
+
+
+    TEST_FIXTURE(GameStatesTestEnvironmentWith3States, ProcessCurrent)
+    {
+        pGameStateManager->pushState(1);
+
+        CHECK(!pState1->bProcessCalled);
+
+        pGameStateManager->processCurrentState();
+
+        CHECK(pState1->bProcessCalled);
+    }
 }
 

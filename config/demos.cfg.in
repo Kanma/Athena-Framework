@@ -1,0 +1,40 @@
+{
+    "log": {
+        "kind": "console"
+    },
+    "locations": {
+    },
+    "graphics": {
+        "pluginsFolder": "@CONFIG_PLUGIN_FOLDER@",
+        "plugins": [
+            @CONFIG_RENDERSYSTEM_D3D9@
+            @CONFIG_RENDERSYSTEM_D3D11@
+            @CONFIG_RENDERSYSTEM_GL@
+            "Plugin_BSPSceneManager",
+            "Plugin_CgProgramManager",
+            "Plugin_OctreeSceneManager",
+            "Plugin_ParticleFX"
+        ],
+        "resources": [
+            {
+                "group": "General",
+                "fileSystem": [
+                    "@CONFIG_ATHENA_MEDIA_PATH@",
+                    "@CONFIG_DEMOS_MEDIA_PATH@/materials",
+                    "@CONFIG_DEMOS_MEDIA_PATH@/meshes",
+                    "@CONFIG_DEMOS_MEDIA_PATH@/textures"
+                ],
+                "zip": [
+                    "@CONFIG_ATHENA_MEDIA_PATH@/Packs/AthenaMedia.zip"
+                ]
+            }
+        ],
+        "renderSystem": "OpenGL Rendering Subsystem",
+        "renderOptions": [
+        ]
+    },
+    "physics": {
+        "nbMaxSubSteps": 1,
+        "fixedTimeStep": 0.016667
+    }
+}

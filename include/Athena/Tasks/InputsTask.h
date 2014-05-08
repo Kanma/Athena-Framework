@@ -1,7 +1,7 @@
-/**	@file	InputsTask.h
-	@author	Philip Abbet
+/** @file   InputsTask.h
+    @author Philip Abbet
 
-	Declaration of the class 'Athena::Tasks::InputsTask'
+    Declaration of the class 'Athena::Tasks::InputsTask'
 */
 
 #ifndef _ATHENA_TASKS_INPUTSTASK_H
@@ -15,40 +15,40 @@ namespace Athena {
 namespace Tasks {
 
 //-----------------------------------------------------------------------------------
-/// @brief	Task that ticks the Inputs Unit each frame
+/// @brief  Task that ticks the Inputs Unit each frame
 //-----------------------------------------------------------------------------------
-class ATHENA_SYMBOL InputsTask: public Tasks::Task
+class ATHENA_FRAMEWORK_SYMBOL InputsTask: public Tasks::Task
 {
-	//_____ Construction / Destruction __________
+    //_____ Construction / Destruction __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Constructor
+    /// @brief  Constructor
     //-----------------------------------------------------------------------------------
-	InputsTask();
+    InputsTask();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Destructor
+    /// @brief  Destructor
     //-----------------------------------------------------------------------------------
-	virtual ~InputsTask();
+    virtual ~InputsTask();
 
 
-	//_____ Management of the task __________
+    //_____ Management of the task __________
 public:
     //-----------------------------------------------------------------------------------
-    /// @brief	Start the task
-    /// @return	'true' if successful
+    /// @brief  Start the task
+    /// @return 'true' if successful
     //-----------------------------------------------------------------------------------
-	virtual bool start();
+    virtual bool start();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Called each time the task must perform its job
+    /// @brief  Called each time the task must perform its job
     //-----------------------------------------------------------------------------------
-	virtual void update();
+    virtual void update();
 
     //-----------------------------------------------------------------------------------
-    /// @brief	Stop the task
+    /// @brief  Stop the task
     //-----------------------------------------------------------------------------------
-	virtual void stop();
+    virtual void stop();
 };
 
 }
