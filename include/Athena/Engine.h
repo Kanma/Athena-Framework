@@ -75,8 +75,8 @@ public:
     /// @param  strName                 Name of the window
     /// @param  width                   Width of the window
     /// @param  height                  Height of the window
-    /// @param  fullscreen              Indicates if the rendering must be done on the full
-    ///                                 screen
+    /// @param  fullscreen              Indicates if the rendering must be done on the
+    ///                                 full screen
     /// @return                         The render window, 0 if failed
     //-----------------------------------------------------------------------------------
     Ogre::RenderWindow* createRenderWindow(size_t existingwindowhandle,
@@ -90,8 +90,8 @@ public:
     /// @param  strTitle                Title of the window
     /// @param  width                   Width of the window
     /// @param  height                  Height of the window
-    /// @param  fullscreen              Indicates if the rendering must be done on the full
-    ///                                 screen
+    /// @param  fullscreen              Indicates if the rendering must be done on the
+    ///                                 full screen
     /// @return                         The render window, 0 if failed
     //-----------------------------------------------------------------------------------
     Ogre::RenderWindow* createRenderWindow(const std::string& strName,
@@ -105,6 +105,14 @@ public:
     inline Ogre::RenderWindow* getMainWindow()
     {
         return m_pMainWindow;
+    }
+
+    //-----------------------------------------------------------------------------------
+    /// @brief  Retrieves the Location Manager
+    //-----------------------------------------------------------------------------------
+    inline Data::LocationManager* getLocationManager()
+    {
+        return m_pLocationManager;
     }
 
     //-----------------------------------------------------------------------------------
@@ -158,12 +166,12 @@ public:
 #endif
 
 
-private:
     //-----------------------------------------------------------------------------------
     /// @brief  Destroy the subsystems
     //-----------------------------------------------------------------------------------
     void destroy();
 
+private:
     //-----------------------------------------------------------------------------------
     /// @brief  Create the Inputs Unit
     //-----------------------------------------------------------------------------------

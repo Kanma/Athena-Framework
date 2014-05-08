@@ -79,8 +79,12 @@ static const char*  __CONTEXT__ = "Engine";
 
 /********************************** STATIC ATTRIBUTES **********************************/
 
-/// The instance of the singleton
-template<> Engine* Singleton<Engine>::ms_Singleton = 0;
+namespace Athena {
+    namespace Utils {
+        /// The instance of the singleton
+        template<> Engine* Singleton<Engine>::ms_Singleton = 0;
+    }
+}
 
 
 /************************************** FUNCTIONS **************************************/
@@ -293,6 +297,12 @@ void Engine::destroy()
 {
     ATHENA_LOG_EVENT("Destruction of the engine");
 
+    delete m_pGameStateManager;
+    m_pGameStateManager = 0;
+
+    delete m_pTaskManager;
+    m_pTaskManager = 0;
+
     // delete m_pNetworkManager;
     // m_pNetworkManager = 0;
 
@@ -309,12 +319,6 @@ void Engine::destroy()
 
     delete m_pInputsUnit;
     m_pInputsUnit = 0;
-
-    delete m_pTaskManager;
-    m_pTaskManager = 0;
-
-    delete m_pGameStateManager;
-    m_pGameStateManager = 0;
 
     delete m_pScenesManager;
     m_pScenesManager = 0;

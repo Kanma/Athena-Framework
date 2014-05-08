@@ -52,6 +52,10 @@ using namespace Athena::GameStates;
 
 - (void) windowWillClose:(NSNotification*)aNotification
 {
+    NSNotificationCenter* c = [NSNotificationCenter defaultCenter];
+    [c removeObserver:self name:NSWindowWillCloseNotification object:nil];
+
+    engine.destroy();
     [NSApp terminate:self];
 }
 

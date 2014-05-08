@@ -20,5 +20,4 @@ if (APPLE)
     include("osx/external_window/external_window.cmake")
 endif()
 
-#add_subdirectory(osx)
 add_subdirectory(OgreHead)

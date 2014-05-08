@@ -90,6 +90,6 @@ if (DEFINED ATHENA_SCRIPTING_ENABLED AND ATHENA_SCRIPTING_ENABLED)
     add_subdirectory(scripting)
 endif()
 
-if (DEFINED ATHENA_BUILD_DEMOS)
+if (DEFINED ATHENA_BUILD_DEMOS AND ATHENA_BUILD_DEMOS)
     add_subdirectory(demos)
 endif()
